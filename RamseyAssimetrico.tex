@@ -44,6 +44,7 @@
 \newcommand{\mdens}{m_2}
 \newcommand{\maxdens}{m}
 \newcommand{\whp}{a.a.s.}
+\newcommand{\hugo}[1]{\textcolor{blue}{H: #1}}
 
 \date{\today}
 
@@ -438,6 +439,7 @@ satisfaz um dos seguintes padrões:
     depende unicamente de $v_j$.
 \end{enumerate}
 \end{definition}
+\noindent\hugo{definir a propriedade ramsey canônica}
 
 \begin{theorem}[Erdős--Rado \cite{erdos1950combinatorial}]
 Para qualquer inteiro $\ell \ge 1$, existe $N = N(\ell)$ tal que toda coloração
@@ -469,6 +471,7 @@ arestas de $G$, existe pelo menos
   \item uma cópia \textbf{lexicográfica} de $H_3$.
 \end{itemize}
 \end{definition}
+\hugo{escolher qual definição de canônico usar. Todas as cópias lexicográficas de $H_3$, ou só uma cópia min-lex ou max-lex? Dizer que $G$ é ordenado.}
 
 \begin{question}
 \label{q:assimetrico}
@@ -484,7 +487,7 @@ Em particular, como o limiar depende das densidades $\mdens(H_i)$?
 
 Queremos determinar o limiar exato para a propriedade $\Gnp \xrightarrow{\mathrm{can}} (K_3,K_4,K_5)$.
 Note que, para $p \ll n^{-1/\mdens(K_3)} = n^{-1/2}$, o grafo aleatório \whp\ não possui triângulos, tornando a propriedade trivialmente falsa (através de uma coloração arco-íris, por exemplo).
-Por outro lado, para $p \gg n^{-1/\mdens(K_5)} = n^{-1/3}$, a existência de um $K_5$ canônico é garantida \whp, o que força a existência de uma das estruturas proibidas.
+Por outro lado, para $p \gg n^{-1/\mdens(K_5)} = n^{-1/3}$, a existência de um $K_5$ canônico é garantida \whp, o que força a existência de uma das estruturas proibidas. \hugo{a.q.c. em vez de a.a.s.}
 
 O resultado principal que buscamos formalizar é que o limiar coincide com o do clique mais denso.
 Para a prova do $0$-enunciado, precisaremos das seguintes definições estruturais:
@@ -493,9 +496,9 @@ Para a prova do $0$-enunciado, precisaremos das seguintes definições estrutura
 \label{def:H-fechado}
 Dado um grafo $G$ e um grafo $H$, dizemos que:
 \begin{itemize}
-  \item Uma aresta $e \in E(G)$ é \textbf{$H$-fechada} se pertence a pelo menos duas cópias de $H$ em $G$.
+  \item Uma aresta $e \in E(G)$ é \textbf{$H$-fechada} se pertence a pelo menos duas cópias de~$H$ em~$G$.
   \item Uma cópia $H' \subseteq G$ de $H$ é \textbf{$H$-fechada} se pelo menos três de suas arestas são $H$-fechadas.
-  \item O grafo $G$ é \textbf{$H$-fechado} se todo vértice e toda aresta de $G$ pertencem a pelo menos uma cópia de $H$, e toda cópia de $H$ em $G$ é $H$-fechada.
+  \item O grafo $G$ é \textbf{$H$-fechado} se todo vértice e toda aresta de~$G$ pertencem a pelo menos uma cópia de~$H$, e toda cópia de~$H$ em~$G$ é $H$-fechada.
 \end{itemize}
 \end{definition}
 
@@ -505,9 +508,10 @@ Um grafo $G$ é um \textbf{$H$-bloco} se $G$ é $H$-fechado e, para todo subconj
 \end{definition}
 
 \begin{remark}
-A chave do framework de Nenadov et al.\ é que, quando $p \ll n^{-1/\maxdens(H)}$, os $H$-blocos presentes em $\Gnp$ têm tamanho $O(1)$ \whp.
+A chave do framework de Nenadov et al.\ é que, quando $p \ll n^{-1/\maxdens(H)}$\hugo{$m_2(H)$?}, os $H$-blocos presentes em $\Gnp$ têm tamanho $O(1)$ \whp.
 \end{remark}
 
+\hugo{enunciar o teorema entes das definições estruturais.}
 \begin{theorem}
   Existe um limiar semi-agudo para a propriedade $\Gnp \xrightarrow{\mathrm{can}} (K_3,K_4,K_5)$ em $\hat{p}(n) = n^{-1/3}$. Ou seja, existem constantes $c, C > 0$ tais que:
   \[
@@ -531,8 +535,8 @@ A chave do framework de Nenadov et al.\ é que, quando $p \ll n^{-1/\maxdens(H)}
   ou seja, a cor de cada aresta é determinada pelo vértice de menor índice segundo $\sigma$.
   Por construção, $\chi$ é uma coloração min-lex e satisfaz:
   \begin{itemize}
-    \item não existe $K_3$ monocromático sob $c$;
-    \item não existe $K_4$ arco-íris sob $c$.
+    \item não existe $K_3$ monocromático sob $\chi$;
+    \item não existe $K_4$ arco-íris sob $\chi$.
   \end{itemize}
   O problema é que toda cópia de $K_5$ em $G$ é lexicográfica (min-lex) sob $\chi$ --- exatamente a estrutura proibida que precisamos eliminar.
 
@@ -623,7 +627,7 @@ e o \textbf{pentágono interno} (as diagonais $v_1v_3, v_3v_5, v_5v_2, v_2v_4, v
 \end{center}
 
 \noindent
-Verifica-se diretamente que $\chi|_{H_0}$ é uma coloração própria de $H_0$ (todo vértice tem grau $2$ em cada $C_5$),
+Verifica-se diretamente que $\chi|_{H_0}$ é uma coloração própria de $H_0$ (todo vértice tem grau $2$ em cada $C_5$)\hugo{tá usando qual definição de coloração própria?},
 não possui $K_3$ monocromático, não possui $K_4$ arco-íris, e não possui $K_5$ lexicográfico.
 
 
