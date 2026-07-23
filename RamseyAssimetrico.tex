@@ -4,6 +4,8 @@
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{amsfonts,amssymb,amsmath,textcomp,amsthm}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 \usepackage{tikz}
 \usetikzlibrary{calc}
 \usepackage{geometry}
@@ -44,6 +46,7 @@
 \newcommand{\mdens}{m_2}
 \newcommand{\maxdens}{m}
 \newcommand{\whp}{a.a.s.}
+\newcommand{\hugo}[1]{\textcolor{blue}{H: #1}}
 
 \date{\today}
 
@@ -56,12 +59,12 @@
 
   \vspace{0.4cm}
 
-  Afonso Sant'Anna
+  Afonso Sant'Anna \quad Hugo Vicente
 
   \vspace{0.2cm}
 
   {\small Orientador: Yoshiharu Kohayakawa \quad
-   Coorientador: Guilherme O.\ Mota}
+    Coorientador: Guilherme O.\ Mota}
 
   \vspace{0.2cm}
 
@@ -91,59 +94,59 @@ Dizemos que $\Gnp$ satisfaz uma propriedade \emph{assintoticamente quase certame
 (\whp) se a probabilidade de satisfazê-la tende a $1$ quando $n \to \infty$.
 
 \begin{definition}[Limiar e tipos de limiar]
-Seja $\mathcal{P}$ uma propriedade monótona crescente de grafos.
-Uma função $\hat{p} = \hat{p}(n)$ é um \textbf{limiar grosseiro} (\emph{coarse threshold})
-para $\mathcal{P}$ em $\Gnp$ se
-\[
-  \lim_{n\to\infty} \Pr[\Gnp \in \mathcal{P}] =
-  \begin{cases}
-    0 & \text{se } p = o(\hat{p}),\\
-    1 & \text{se } p = \omega(\hat{p}).
-  \end{cases}
-\]
-Dizemos que $\hat{p}$ é um \textbf{limiar semi-agudo} (\emph{semi-sharp threshold})
-se existem constantes $c, C > 0$ tais que
-\[
-  \lim_{n\to\infty} \Pr[\Gnp \in \mathcal{P}] =
-  \begin{cases}
-    0 & \text{se } p \le c\,\hat{p},\\
-    1 & \text{se } p \ge C\,\hat{p}.
-  \end{cases}
-\]
-O \textbf{$0$-enunciado} refere-se à afirmação para $p$ abaixo do limiar,
-e o \textbf{$1$-enunciado} à afirmação para $p$ acima do limiar.
+  Seja $\mathcal{P}$ uma propriedade monótona crescente de grafos.
+  Uma função $\hat{p} = \hat{p}(n)$ é um \textbf{limiar grosseiro} (\emph{coarse threshold})
+  para $\mathcal{P}$ em $\Gnp$ se
+  \[
+    \lim_{n\to\infty} \Pr[\Gnp \in \mathcal{P}] =
+    \begin{cases}
+      0 & \text{se } p = o(\hat{p}),      \\
+      1 & \text{se } p = \omega(\hat{p}).
+    \end{cases}
+  \]
+  Dizemos que $\hat{p}$ é um \textbf{limiar semi-agudo} (\emph{semi-sharp threshold})
+  se existem constantes $c, C > 0$ tais que
+  \[
+    \lim_{n\to\infty} \Pr[\Gnp \in \mathcal{P}] =
+    \begin{cases}
+      0 & \text{se } p \le c\,\hat{p}, \\
+      1 & \text{se } p \ge C\,\hat{p}.
+    \end{cases}
+  \]
+  O \textbf{$0$-enunciado} refere-se à afirmação para $p$ abaixo do limiar,
+  e o \textbf{$1$-enunciado} à afirmação para $p$ acima do limiar.
 \end{definition}
 
 \begin{definition}[Densidades de um grafo]
-\label{def:densidades}
-Dado um grafo $H$, definem-se:
-\begin{itemize}
-  \item A \textbf{densidade} de $H$:
-    $d(H) := \dfrac{e(H)}{v(H)}$, onde $e(H) = |E(H)|$ e $v(H) = |V(H)|$.
+  \label{def:densidades}
+  Dado um grafo $H$, definem-se:
+  \begin{itemize}
+    \item A \textbf{densidade} de $H$:
+          $d(H) := \dfrac{e(H)}{v(H)}$, onde $e(H) = |E(H)|$ e $v(H) = |V(H)|$.
 
-  \item A \textbf{densidade máxima} de $H$:
-    \[
-      \maxdens(H) := \max\!\left\{\frac{e(J)}{v(J)} : J \subseteq H,\; v(J) \ge 1\right\}.
-    \]
-    Dizemos que $H$ é \textbf{balanceado} se $\maxdens(H) = d(H)$, e
-    \textbf{estritamente balanceado} se $\maxdens(H) > d(J)$ para todo
-    $J \subsetneq H$ com $v(J) \ge 1$.
+    \item A \textbf{densidade máxima} de $H$:
+          \[
+            \maxdens(H) := \max\!\left\{\frac{e(J)}{v(J)} : J \subseteq H,\; v(J) \ge 1\right\}.
+          \]
+          Dizemos que $H$ é \textbf{balanceado} se $\maxdens(H) = d(H)$, e
+          \textbf{estritamente balanceado} se $\maxdens(H) > d(J)$ para todo
+          $J \subsetneq H$ com $v(J) \ge 1$.
 
-  \item A \textbf{2-densidade} de $H$ (para $v(H) \ge 3$):
-    \[
-      d_2(H) := \frac{e(H)-1}{v(H)-2}.
-    \]
+    \item A \textbf{2-densidade} de $H$ (para $v(H) \ge 3$):
+          \[
+            d_2(H) := \frac{e(H)-1}{v(H)-2}.
+          \]
 
-  \item A \textbf{2-densidade máxima} de $H$:
-    \[
-      \mdens(H) := \max\!\left\{d_2(J) : J \subseteq H,\; v(J) \ge 3\right\}
-        \cup \left\{\tfrac{1}{2}\right\}.
-    \]
-    (A fração $\frac{1}{2}$ corresponde ao caso $H \cong K_2$.)
-    Dizemos que $H$ é \textbf{$2$-balanceado} se $\mdens(H) = d_2(H)$, e
-    \textbf{estritamente $2$-balanceado} se $\mdens(H) > d_2(J)$ para todo
-    $J \subsetneq H$.
-\end{itemize}
+    \item A \textbf{2-densidade máxima} de $H$:
+          \[
+            \mdens(H) := \max\!\left\{d_2(J) : J \subseteq H,\; v(J) \ge 3\right\}
+            \cup \left\{\tfrac{1}{2}\right\}.
+          \]
+          (A fração $\frac{1}{2}$ corresponde ao caso $H \cong K_2$.)
+          Dizemos que $H$ é \textbf{$2$-balanceado} se $\mdens(H) = d_2(H)$, e
+          \textbf{estritamente $2$-balanceado} se $\mdens(H) > d_2(J)$ para todo
+          $J \subsetneq H$.
+  \end{itemize}
 \end{definition}
 
 \begin{example}
@@ -155,33 +158,48 @@ Dado um grafo $H$, definem-se:
   $\mdens(K_5) = 3$, $\mdens(C_5) = \frac{4}{3}$, $\mdens(C_4) = \frac{3}{2}$.
 \end{example}
 
+\begin{definition}[$H$-fechamento]
+  \label{def:H-fechado}
+  Dado um grafo $G$ e um grafo $H$, dizemos que:
+  \begin{itemize}
+    \item Uma aresta $e \in E(G)$ é \textbf{$H$-fechada} se pertence a pelo menos duas cópias de~$H$ em~$G$.
+    \item Uma cópia $H' \subseteq G$ de $H$ é \textbf{$H$-fechada} se pelo menos três de suas arestas são $H$-fechadas.
+    \item O grafo $G$ é \textbf{$H$-fechado} se todo vértice e toda aresta de~$G$ pertencem a pelo menos uma cópia de~$H$, e toda cópia de~$H$ em~$G$ é $H$-fechada.
+  \end{itemize}
+\end{definition}
+
+\begin{definition}[$H$-Bloco]
+  \label{def:H-bloco}
+  Um grafo $G$ é um \textbf{$H$-bloco} se $G$ é $H$-fechado e, para todo subconjunto próprio não-vazio de arestas $E' \subsetneq E(G)$, existe uma cópia $H'$ de $H$ em $G$ tal que $E(H') \cap E' \ne \emptyset$ e $E(H') \setminus E' \ne \emptyset$.
+\end{definition}
+
 % ============================================================
 \section{Propriedade de Ramsey em Grafos Aleatórios}
 % ============================================================
 
 \begin{definition}[Propriedade $r$-Ramsey]
-Para grafos $G$ e $H$ e um inteiro $r \ge 2$, escrevemos
-$G \ramsey{r} H$ para denotar a propriedade de que,
-em toda coloração das arestas de $G$ com $r$ cores,
-existe pelo menos uma cópia monocromática de $H$ em $G$.
+  Para grafos $G$ e $H$ e um inteiro $r \ge 2$, escrevemos
+  $G \ramsey{r} H$ para denotar a propriedade de que,
+  em toda coloração das arestas de $G$ com $r$ cores,
+  existe pelo menos uma cópia monocromática de $H$ em $G$.
 \end{definition}
 
 O seguinte resultado é o marco fundamental da teoria:
 
 \begin{theorem}[Rödl--Ruciński \cite{rodl1993lower, rodl1994random, rodl1995threshold}]
-\label{thm:rodl-rucinski}
-Seja $r \ge 2$ um inteiro e seja $H$ um grafo que não é uma floresta de estrelas
-(e, no caso $r = 2$, também não é um caminho de comprimento~$3$).
-Existem constantes positivas $c = c(H,r)$ e $C = C(H,r)$ tais que
-\[
-  \lim_{n\to\infty} \Pr\!\bigl[\Gnp \ramsey{r} H\bigr] =
-  \begin{cases}
-    0 & \text{se } p \le c\, n^{-1/\mdens(H)},\\
-    1 & \text{se } p \ge C\, n^{-1/\mdens(H)}.
-  \end{cases}
-\]
-Em particular, $\hat{p}(n) = n^{-1/\mdens(H)}$ é o limiar semi-agudo para
-a propriedade $r$-Ramsey de $H$ em $\Gnp$.
+  \label{thm:rodl-rucinski}
+  Seja $r \ge 2$ um inteiro e seja $H$ um grafo que não é uma floresta de estrelas
+  (e, no caso $r = 2$, também não é um caminho de comprimento~$3$).
+  Existem constantes positivas $c = c(H,r)$ e $C = C(H,r)$ tais que
+  \[
+    \lim_{n\to\infty} \Pr\!\bigl[\Gnp \ramsey{r} H\bigr] =
+    \begin{cases}
+      0 & \text{se } p \le c\, n^{-1/\mdens(H)}, \\
+      1 & \text{se } p \ge C\, n^{-1/\mdens(H)}.
+    \end{cases}
+  \]
+  Em particular, $\hat{p}(n) = n^{-1/\mdens(H)}$ é o limiar semi-agudo para
+  a propriedade $r$-Ramsey de $H$ em $\Gnp$.
 \end{theorem}
 
 Uma prova curta e elegante do Teorema~\ref{thm:rodl-rucinski} foi dada por
@@ -193,20 +211,20 @@ Nenadov e Steger \cite{nenadov2016short}, usando a técnica de
 % ============================================================
 
 \begin{definition}[Propriedade anti-Ramsey]
-\label{def:antiramsey}
-Dados grafos $G$ e $H$, escrevemos $G \rb H$ para denotar a
-\textbf{propriedade anti-Ramsey} de $G$ com respeito a $H$:
-para toda coloração própria das arestas de $G$
-(com número arbitrário de cores),
-existe pelo menos uma cópia \emph{arco-íris} de $H$ em $G$,
-isto é, uma cópia de $H$ em que cada aresta recebe uma cor distinta.
+  \label{def:antiramsey}
+  Dados grafos $G$ e $H$, escrevemos $G \rb H$ para denotar a
+  \textbf{propriedade anti-Ramsey} de $G$ com respeito a $H$:
+  para toda coloração própria das arestas de $G$
+  (com número arbitrário de cores),
+  existe pelo menos uma cópia \emph{arco-íris} de $H$ em $G$,
+  isto é, uma cópia de $H$ em que cada aresta recebe uma cor distinta.
 \end{definition}
 
 \begin{remark}
-A propriedade $G \rb H$ é monótona crescente em $G$.
-Logo, para qualquer grafo fixo $H$, o grafo aleatório $\Gnp$ admite
-um limiar $p_H^{\mathrm{rb}} = p_H^{\mathrm{rb}}(n)$ para essa propriedade
-(cf.~Bollobás--Thomason).
+  A propriedade $G \rb H$ é monótona crescente em $G$.
+  Logo, para qualquer grafo fixo $H$, o grafo aleatório $\Gnp$ admite
+  um limiar $p_H^{\mathrm{rb}} = p_H^{\mathrm{rb}}(n)$ para essa propriedade
+  (cf.~Bollobás--Thomason).
 \end{remark}
 
 A questão central é determinar $p_H^{\mathrm{rb}}$ em termos de parâmetros
@@ -218,11 +236,11 @@ O primeiro resultado geral foi obtido por Rödl e Tuza~\cite{rodl1992rainbow}
 para ciclos, e depois estendido por Kohayakawa, Konstadinidis e Mota:
 
 \begin{theorem}[Kohayakawa--Konstadinidis--Mota \cite{kohayakawa2014anti}]
-\label{thm:1statement}
-Seja $H$ um grafo qualquer. Existe uma constante $C > 0$ tal que,
-se $p = p(n) \ge C\, n^{-1/\mdens(H)}$, então \whp\
-$\Gnp \rb H$.
-Em particular, $p_H^{\mathrm{rb}} \le n^{-1/\mdens(H)}$.
+  \label{thm:1statement}
+  Seja $H$ um grafo qualquer. Existe uma constante $C > 0$ tal que,
+  se $p = p(n) \ge C\, n^{-1/\mdens(H)}$, então \whp\
+  $\Gnp \rb H$.
+  Em particular, $p_H^{\mathrm{rb}} \le n^{-1/\mdens(H)}$.
 \end{theorem}
 
 Em outras palavras, o limiar anti-Ramsey nunca está acima do limiar Ramsey clássico.
@@ -233,20 +251,20 @@ Para o limite inferior, Nenadov, Person, Škorić e Steger desenvolveram um
 arcabouço geral que reduz o problema probabilístico a uma questão determinística:
 
 \begin{theorem}[Nenadov--Person--Škorić--Steger \cite{nenadov2017algorithmic}]
-\label{thm:framework}
-Seja $H$ um grafo estritamente $2$-balanceado.
-Se todo grafo $G$ tal que $G \rb H$ satisfaz $\maxdens(G) > \mdens(H)$,
-então existe uma constante $c > 0$ tal que, se $p \le c\, n^{-1/\mdens(H)}$,
-então \whp\ $\Gnp \not\rb H$.
+  \label{thm:framework}
+  Seja $H$ um grafo estritamente $2$-balanceado.
+  Se todo grafo $G$ tal que $G \rb H$ satisfaz $\maxdens(G) > \mdens(H)$,
+  então existe uma constante $c > 0$ tal que, se $p \le c\, n^{-1/\mdens(H)}$,
+  então \whp\ $\Gnp \not\rb H$.
 
-Em outras palavras, verificar a condição determinística acima
-é suficiente para obter o $0$-enunciado semi-agudo.
+  Em outras palavras, verificar a condição determinística acima
+  é suficiente para obter o $0$-enunciado semi-agudo.
 \end{theorem}
 
 \begin{definition}[Condição determinística anti-Ramsey]
-\label{def:cond-det}
-Dado um grafo $H$, dizemos que $H$ \textbf{satisfaz a condição}~(D)
-se todo grafo $G$ tal que $G \rb H$ satisfaz $\maxdens(G) > \mdens(H)$.
+  \label{def:cond-det}
+  Dado um grafo $H$, dizemos que $H$ \textbf{satisfaz a condição}~(D)
+  se todo grafo $G$ tal que $G \rb H$ satisfaz $\maxdens(G) > \mdens(H)$.
 \end{definition}
 
 \subsection{Resultados para classes específicas de grafos}
@@ -254,59 +272,59 @@ se todo grafo $G$ tal que $G \rb H$ satisfaz $\maxdens(G) > \mdens(H)$.
 \subsubsection*{Ciclos}
 
 \begin{theorem}[Barros--Cavalar--Mota--Parczyk \cite{AntiCycles}]
-\label{thm:anticycles}
-O limiar $p_{C_\ell}^{\mathrm{rb}}$ para a propriedade anti-Ramsey do ciclo $C_\ell$
-satisfaz:
-\begin{itemize}
-  \item Se $\ell \ge 5$, então
-    $p_{C_\ell}^{\mathrm{rb}} = n^{-1/\mdens(C_\ell)} = n^{-(\ell-2)/(\ell-1)}$
-    (limiar semi-agudo).
-  \item Para $\ell = 4$:
-    $p_{C_4}^{\mathrm{rb}} = n^{-3/4} \ll n^{-1/\mdens(C_4)} = n^{-2/3}$.
-  \item Para $\ell = 3$: a condição de ser grafo arco-íris é satisfeita
-    trivialmente, logo
-    $p_{C_3}^{\mathrm{rb}} = n^{-1}$ (limiar para a presença de um triângulo).
-\end{itemize}
+  \label{thm:anticycles}
+  O limiar $p_{C_\ell}^{\mathrm{rb}}$ para a propriedade anti-Ramsey do ciclo $C_\ell$
+  satisfaz:
+  \begin{itemize}
+    \item Se $\ell \ge 5$, então
+          $p_{C_\ell}^{\mathrm{rb}} = n^{-1/\mdens(C_\ell)} = n^{-(\ell-2)/(\ell-1)}$
+          (limiar semi-agudo).
+    \item Para $\ell = 4$:
+          $p_{C_4}^{\mathrm{rb}} = n^{-3/4} \ll n^{-1/\mdens(C_4)} = n^{-2/3}$.
+    \item Para $\ell = 3$: a condição de ser grafo arco-íris é satisfeita
+          trivialmente, logo
+          $p_{C_3}^{\mathrm{rb}} = n^{-1}$ (limiar para a presença de um triângulo).
+  \end{itemize}
 \end{theorem}
 
 \subsubsection*{Grafos completos}
 
 \begin{theorem}[Kohayakawa--Mota--Parczyk--Schnitzer \cite{AntiComplete}]
-\label{thm:anticomplete}
-Para o clique $K_k$, o limiar $p_{K_k}^{\mathrm{rb}}$ satisfaz:
-\begin{itemize}
-  \item Se $k \ge 5$, então
-    $p_{K_k}^{\mathrm{rb}} = n^{-1/\mdens(K_k)} = n^{-2/(k+1)}$
-    (limiar semi-agudo).
-  \item Para $k = 4$:
-    $p_{K_4}^{\mathrm{rb}} = n^{-7/15} \ll n^{-1/\mdens(K_4)} = n^{-2/5}$.
-  \item Para $k = 3$: trivialmente $p_{K_3}^{\mathrm{rb}} = n^{-1}$.
-\end{itemize}
+  \label{thm:anticomplete}
+  Para o clique $K_k$, o limiar $p_{K_k}^{\mathrm{rb}}$ satisfaz:
+  \begin{itemize}
+    \item Se $k \ge 5$, então
+          $p_{K_k}^{\mathrm{rb}} = n^{-1/\mdens(K_k)} = n^{-2/(k+1)}$
+          (limiar semi-agudo).
+    \item Para $k = 4$:
+          $p_{K_4}^{\mathrm{rb}} = n^{-7/15} \ll n^{-1/\mdens(K_4)} = n^{-2/5}$.
+    \item Para $k = 3$: trivialmente $p_{K_3}^{\mathrm{rb}} = n^{-1}$.
+  \end{itemize}
 \end{theorem}
 
 \subsubsection*{Caso geral: 2-densidade alta}
 
 \begin{theorem}[Kuperwasser \cite{kuperwasser2026anti}]
-\label{thm:kuperwasser}
-Seja $H$ um grafo com $\mdens(H) \ge 19$.
-Existem constantes $c_0 < c_1$ tais que
-\[
-  \lim_{n\to\infty}\Pr\!\bigl[\Gnp \rb H\bigr] =
-  \begin{cases}
-    0 & \text{se } p \le c_0\, n^{-1/\mdens(H)},\\
-    1 & \text{se } p \ge c_1\, n^{-1/\mdens(H)}.
-  \end{cases}
-\]
+  \label{thm:kuperwasser}
+  Seja $H$ um grafo com $\mdens(H) \ge 19$.
+  Existem constantes $c_0 < c_1$ tais que
+  \[
+    \lim_{n\to\infty}\Pr\!\bigl[\Gnp \rb H\bigr] =
+    \begin{cases}
+      0 & \text{se } p \le c_0\, n^{-1/\mdens(H)}, \\
+      1 & \text{se } p \ge c_1\, n^{-1/\mdens(H)}.
+    \end{cases}
+  \]
 \end{theorem}
 
 O Teorema~\ref{thm:kuperwasser} é provado verificando a condição determinística
 do Teorema~\ref{thm:framework} através do seguinte resultado:
 
 \begin{theorem}[Kuperwasser \cite{kuperwasser2026anti}]
-\label{thm:kuperwasser-det}
-Todo grafo $G$ com $\maxdens(G) \ge 18$ admite uma coloração própria das arestas
-tal que todo subgrafo arco-íris tem $2$-densidade estritamente menor que $\maxdens(G)$.
-Em particular, se $\mdens(H) > 18$, então $H$ satisfaz a condição~\emph{(D)}.
+  \label{thm:kuperwasser-det}
+  Todo grafo $G$ com $\maxdens(G) \ge 18$ admite uma coloração própria das arestas
+  tal que todo subgrafo arco-íris tem $2$-densidade estritamente menor que $\maxdens(G)$.
+  Em particular, se $\mdens(H) > 18$, então $H$ satisfaz a condição~\emph{(D)}.
 \end{theorem}
 
 \subsection{A tabela de limiares conhecidos}
@@ -315,20 +333,20 @@ A tabela a seguir resume o estado atual dos limiares para a propriedade anti-Ram
 adaptada de \cite{behague2025thresholds}:
 
 \begin{center}
-\renewcommand{\arraystretch}{1.4}
-\begin{tabular}{lll}
-\hline
-\textbf{Grafo $H$} & \textbf{Limiar $p_H^{\mathrm{rb}}$} & \textbf{Referência}\\
-\hline
-$K_\ell$, $\ell \ge 5$ & $n^{-2/(\ell+1)}$ (semi-agudo) & \cite{AntiComplete}\\
-$K_4$                  & $n^{-7/15} \ll n^{-1/m_2(K_4)}$& \cite{AntiComplete}\\
-$K_3$                  & $n^{-1}$                        & trivial\\
-$C_\ell$, $\ell \ge 5$ & $n^{-(\ell-2)/(\ell-1)}$ (semi-agudo) & \cite{AntiCycles}\\
-$C_4$                  & $n^{-3/4} \ll n^{-1/m_2(C_4)}$ & \cite{AntiCycles}\\
-$C_3$                  & $n^{-1}$                        & trivial\\
-$H$ com $m_2(H)\ge 19$ & $n^{-1/m_2(H)}$ (semi-agudo)   & \cite{kuperwasser2026anti}\\
-\hline
-\end{tabular}
+  \renewcommand{\arraystretch}{1.4}
+  \begin{tabular}{lll}
+    \hline
+    \textbf{Grafo $H$}     & \textbf{Limiar $p_H^{\mathrm{rb}}$}   & \textbf{Referência}        \\
+    \hline
+    $K_\ell$, $\ell \ge 5$ & $n^{-2/(\ell+1)}$ (semi-agudo)        & \cite{AntiComplete}        \\
+    $K_4$                  & $n^{-7/15} \ll n^{-1/m_2(K_4)}$       & \cite{AntiComplete}        \\
+    $K_3$                  & $n^{-1}$                              & trivial                    \\
+    $C_\ell$, $\ell \ge 5$ & $n^{-(\ell-2)/(\ell-1)}$ (semi-agudo) & \cite{AntiCycles}          \\
+    $C_4$                  & $n^{-3/4} \ll n^{-1/m_2(C_4)}$        & \cite{AntiCycles}          \\
+    $C_3$                  & $n^{-1}$                              & trivial                    \\
+    $H$ com $m_2(H)\ge 19$ & $n^{-1/m_2(H)}$ (semi-agudo)          & \cite{kuperwasser2026anti} \\
+    \hline
+  \end{tabular}
 \end{center}
 
 \subsection{Questão em aberto: grafos de cintura grande}
@@ -339,11 +357,11 @@ $n^{-1/\mdens(H)}$ exatamente para grafos ``pequenos'' de cintura baixa
 deste projeto de doutorado:
 
 \begin{question}
-\label{q:cintura}
-Seja $H$ um grafo com cintura (comprimento do menor ciclo) estritamente maior que~$4$.
-É verdade que $p_H^{\mathrm{rb}} = n^{-1/\mdens(H)}$?
-Equivalentemente, $H$ sempre satisfaz a condição~\emph{(D)}
-(Definição~\ref{def:cond-det}) quando $\mathrm{girth}(H) > 4$?
+  \label{q:cintura}
+  Seja $H$ um grafo com cintura (comprimento do menor ciclo) estritamente maior que~$4$.
+  É verdade que $p_H^{\mathrm{rb}} = n^{-1/\mdens(H)}$?
+  Equivalentemente, $H$ sempre satisfaz a condição~\emph{(D)}
+  (Definição~\ref{def:cond-det}) quando $\mathrm{girth}(H) > 4$?
 \end{question}
 
 % ============================================================
@@ -354,66 +372,66 @@ Este problema, estudado em \cite{behague2025thresholds}, generaliza tanto
 a propriedade de Ramsey clássica quanto a anti-Ramsey.
 
 \begin{definition}[Propriedade Ramsey restrita]
-\label{def:cram}
-Dados grafos $H_1$ e $H_2$, escrevemos $G \cram (H_1, H_2)$ para denotar
-a \textbf{propriedade Ramsey restrita} (\emph{constrained Ramsey}):
-para toda coloração própria das arestas de $G$,
-existe uma cópia monocromática de $H_1$ \emph{ou} uma cópia arco-íris de $H_2$.
+  \label{def:cram}
+  Dados grafos $H_1$ e $H_2$, escrevemos $G \cram (H_1, H_2)$ para denotar
+  a \textbf{propriedade Ramsey restrita} (\emph{constrained Ramsey}):
+  para toda coloração própria das arestas de $G$,
+  existe uma cópia monocromática de $H_1$ \emph{ou} uma cópia arco-íris de $H_2$.
 \end{definition}
 
 \begin{remark}
-Quando $H_2$ é uma floresta, qualquer coloração própria tem trivialmente uma
-cópia arco-íris de $H_2$ (desde que o grafo seja grande o suficiente). Logo,
-o caso interessante é quando $H_2$ não é uma floresta.
+  Quando $H_2$ é uma floresta, qualquer coloração própria tem trivialmente uma
+  cópia arco-íris de $H_2$ (desde que o grafo seja grande o suficiente). Logo,
+  o caso interessante é quando $H_2$ não é uma floresta.
 
-Quando $H_1 = $ estrela com $k$ arestas $K_{1,k}$ e $H_2 = H$, a propriedade
-$G \cram (K_{1,k}, H)$ equivale a dizer que toda coloração \emph{localmente
-$(k-1)$-limitada} de $G$ (em que cada cor aparece no máximo $k-1$ vezes por vértice)
-contém uma cópia arco-íris de $H$. Assim,
-a propriedade anti-Ramsey é o caso particular $k = 2$
-(colorações próprias = colorações localmente $1$-limitadas).
+  Quando $H_1 = $ estrela com $k$ arestas $K_{1,k}$ e $H_2 = H$, a propriedade
+  $G \cram (K_{1,k}, H)$ equivale a dizer que toda coloração \emph{localmente
+    $(k-1)$-limitada} de $G$ (em que cada cor aparece no máximo $k-1$ vezes por vértice)
+  contém uma cópia arco-íris de $H$. Assim,
+  a propriedade anti-Ramsey é o caso particular $k = 2$
+  (colorações próprias = colorações localmente $1$-limitadas).
 \end{remark}
 
 \subsection{Resultados principais de Behague et al.}
 
 \begin{theorem}[Behague--Hancock--Hyde--Letzter--Morrison \cite{behague2025thresholds}]
-\label{thm:behague-1-stmt}
-Sejam $k \ge 2$ e $H$ um grafo qualquer.
-Existe uma constante $C > 0$ tal que, se $p \ge C\, n^{-1/\mdens(H)}$, então
-\whp\ $\Gnp \cram (K_{1,k}, H)$.
+  \label{thm:behague-1-stmt}
+  Sejam $k \ge 2$ e $H$ um grafo qualquer.
+  Existe uma constante $C > 0$ tal que, se $p \ge C\, n^{-1/\mdens(H)}$, então
+  \whp\ $\Gnp \cram (K_{1,k}, H)$.
 \end{theorem}
 
 O Teorema~\ref{thm:behague-1-stmt} generaliza o Teorema~\ref{thm:1statement}.
 
 \begin{definition}[Densidades relevantes para Ramsey restrito]
-Para o problema restrito com $H_1 = K_{1,k}$, definem-se:
-\begin{align*}
-  m_a(H) &:= \inf\!\bigl\{\maxdens(G) : G \cram (K_{1,k}, H)\bigr\}\\
-         &\phantom{:}= \text{densidade máxima do menor grafo} \ G\ \text{que força }\\
-         &\phantom{= \text{densidade máxima do menor grafo} G \text{que força}} \text{Ramsey restrito para } (K_{1,k}, H).
-\end{align*}
-O limiar candidato natural é então $n^{-1/m_a(H)}$.
+  Para o problema restrito com $H_1 = K_{1,k}$, definem-se:
+  \begin{align*}
+    m_a(H) & := \inf\!\bigl\{\maxdens(G) : G \cram (K_{1,k}, H)\bigr\}                                                        \\
+           & \phantom{:}= \text{densidade máxima do menor grafo} \ G\ \text{que força }                                       \\
+           & \phantom{= \text{densidade máxima do menor grafo} G \text{que força}} \text{Ramsey restrito para } (K_{1,k}, H).
+  \end{align*}
+  O limiar candidato natural é então $n^{-1/m_a(H)}$.
 \end{definition}
 
 \begin{theorem}[Behague et al.\ \cite{behague2025thresholds} -- $0$-enunciado geral]
-\label{thm:behague-0-stmt}
-Sejam $k \ge 3$ e $H$ um grafo que não é floresta.
-\begin{enumerate}
-  \item[(a)] Se $k \ge 4$, \emph{ou} $\mdens(H) \ne 2$, \emph{ou}
-    $\mdens(H) = 2$ e $H$ contém um subgrafo estritamente $2$-balanceado
-    $J \ne K_3$ com $\mdens(J) = 2$,
-    então existem $c, C > 0$ tais que
-    \[
-      \lim_{n\to\infty} \Pr\!\bigl[\Gnp \cram (K_{1,k}, H)\bigr] =
-      \begin{cases}
-        0 & \text{se } p \le c\, n^{-1/\mdens(H)},\\
-        1 & \text{se } p \ge C\, n^{-1/\mdens(H)}.
-      \end{cases}
-    \]
-  \item[(b)] Se $k = 3$ e $\mdens(H) = 2$ e o único subgrafo estritamente
-    $2$-balanceado de $H$ com $2$-densidade~$2$ é $K_3$ (e.g.\ $H = K_3$),
-    então o limiar é mais fraco: coarse threshold em $n^{-1/2}$.
-\end{enumerate}
+  \label{thm:behague-0-stmt}
+  Sejam $k \ge 3$ e $H$ um grafo que não é floresta.
+  \begin{enumerate}
+    \item[(a)] Se $k \ge 4$, \emph{ou} $\mdens(H) \ne 2$, \emph{ou}
+      $\mdens(H) = 2$ e $H$ contém um subgrafo estritamente $2$-balanceado
+      $J \ne K_3$ com $\mdens(J) = 2$,
+      então existem $c, C > 0$ tais que
+      \[
+        \lim_{n\to\infty} \Pr\!\bigl[\Gnp \cram (K_{1,k}, H)\bigr] =
+        \begin{cases}
+          0 & \text{se } p \le c\, n^{-1/\mdens(H)}, \\
+          1 & \text{se } p \ge C\, n^{-1/\mdens(H)}.
+        \end{cases}
+      \]
+    \item[(b)] Se $k = 3$ e $\mdens(H) = 2$ e o único subgrafo estritamente
+      $2$-balanceado de $H$ com $2$-densidade~$2$ é $K_3$ (e.g.\ $H = K_3$),
+      então o limiar é mais fraco: coarse threshold em $n^{-1/2}$.
+  \end{enumerate}
 \end{theorem}
 
 % ============================================================
@@ -424,58 +442,68 @@ A teoria canônica de Ramsey estuda estruturas que emergem em colorações
 \emph{arbitrárias} (sem restrição de número de cores).
 
 \begin{definition}[Coloração canônica]
-\label{def:canonica}
-Seja $c : E(G) \to \mathbb{N}$ uma coloração arbitrária das arestas de $G$,
-com uma ordenação total $v_1 < v_2 < \cdots < v_n$ dos vértices de $G$.
-Um subgrafo $H \subseteq G$ possui uma \textbf{coloração canônica} se
-satisfaz um dos seguintes padrões:
-\begin{enumerate}
-  \item \textbf{Monocromático:} todas as arestas de $H$ têm a mesma cor.
-  \item \textbf{Arco-íris:} todas as arestas de $H$ têm cores distintas.
-  \item \textbf{Lexicográfico (min-lex):} a cor de $v_iv_j$ (com $v_i < v_j$)
-    depende unicamente de $v_i$.
-  \item \textbf{Lexicográfico (max-lex):} a cor de $v_iv_j$ (com $v_i < v_j$)
-    depende unicamente de $v_j$.
-\end{enumerate}
+  \label{def:canonica}
+  Seja $c : E(G) \to \mathbb{N}$ uma coloração arbitrária das arestas de $G$,
+  com uma ordenação total $v_1 < v_2 < \cdots < v_n$ dos vértices de $G$.
+  Um subgrafo $H \subseteq G$ possui uma \textbf{coloração canônica} se
+  satisfaz um dos seguintes padrões:
+  \begin{enumerate}
+    \item \textbf{Monocromático:} todas as arestas de $H$ têm a mesma cor.
+    \item \textbf{Arco-íris:} todas as arestas de $H$ têm cores distintas.
+    \item \textbf{Lexicográfico (min-lex):} a cor de $v_iv_j$ (com $v_i < v_j$)
+          depende unicamente de $v_i$.
+    \item \textbf{Lexicográfico (max-lex):} a cor de $v_iv_j$ (com $v_i < v_j$)
+          depende unicamente de $v_j$.
+  \end{enumerate}
+\end{definition}
+
+\begin{definition}[Propriedade Ramsey canônica]
+  \label{def:prop-canonica}
+  Dado um grafo ordenado $G$ (com uma ordenação total fixada nos vértices) e um grafo $H$,
+  dizemos que $G$ satisfaz a \textbf{propriedade Ramsey canônica para $H$},
+  e escrevemos $G \xrightarrow{\mathrm{can}} H$, se toda coloração arbitrária das arestas de $G$
+  contém uma cópia canônica de $H$ (isto é, monocromática, arco-íris, ou lexicográfica min-lex).
 \end{definition}
 
 \begin{theorem}[Erdős--Rado \cite{erdos1950combinatorial}]
-Para qualquer inteiro $\ell \ge 1$, existe $N = N(\ell)$ tal que toda coloração
-arbitrária das arestas de $K_N$ contém uma cópia canônica de $K_\ell$.
+  Para qualquer inteiro $\ell \ge 1$, existe $N = N(\ell)$ tal que toda coloração
+  arbitrária das arestas de $K_N$ contém uma cópia canônica de $K_\ell$.
 \end{theorem}
 
 O resultado de Erdős--Rado foi trazido para o contexto aleatório por Kamčev e Schacht:
 
 \begin{theorem}[Kamčev--Schacht \cite{kamcev2023canonical}]
-\label{thm:kamcev}
-Para todo $\ell \ge 4$, o limiar para a propriedade de que toda coloração
-arbitrária de $\Gnp$ contenha uma cópia canônica de $K_\ell$ é
-$\hat{p}(n) = n^{-2/(\ell+1)} = n^{-1/\mdens(K_\ell)}$.
+  \label{thm:kamcev}
+  Para todo $\ell \ge 4$, o limiar para a propriedade de que toda coloração
+  arbitrária de $\Gnp$ contenha uma cópia canônica de $K_\ell$ é
+  $\hat{p}(n) = n^{-2/(\ell+1)} = n^{-1/\mdens(K_\ell)}$.
 \end{theorem}
 
 \subsection{Cenário assimétrico}
 
 \begin{definition}[Propriedade Ramsey canônica assimétrica]
-\label{def:assimetrico}
-Dados grafos $H_1$, $H_2$ e $H_3$, escrevemos
-\[
-  G \xrightarrow{\mathrm{can}} (H_1, H_2, H_3)
-\]
-para denotar a seguinte propriedade: para toda coloração arbitrária das
-arestas de $G$, existe pelo menos
-\begin{itemize}
-  \item uma cópia \textbf{monocromática} de $H_1$, ou
-  \item uma cópia \textbf{arco-íris} de $H_2$, ou
-  \item uma cópia \textbf{lexicográfica} de $H_3$.
-\end{itemize}
+  \label{def:assimetrico}
+  Seja $G$ um grafo com uma ordenação total fixada nos vértices.
+  Dados grafos $H_1$, $H_2$ e $H_3$, escrevemos
+  \[
+    G \xrightarrow{\mathrm{can}} (H_1, H_2, H_3)
+  \]
+  para denotar a seguinte propriedade: para toda coloração arbitrária das
+  arestas de $G$, existe pelo menos
+  \begin{itemize}
+    \item uma cópia \textbf{monocromática} de $H_1$, ou
+    \item uma cópia \textbf{arco-íris} de $H_2$, ou
+    \item uma cópia \textbf{lexicográfica min-lex} de $H_3$.
+  \end{itemize}
+  (Adotamos ao longo deste trabalho a convenção de que por ``cópia lexicográfica'' entendemos sempre a cópia min-lex.)
 \end{definition}
 
 \begin{question}
-\label{q:assimetrico}
-Qual é o comportamento da função limiar $\hat{p}(n)$ para a propriedade
-$\Gnp \xrightarrow{\mathrm{can}} (H_1, H_2, H_3)$
-quando $H_1$, $H_2$ e $H_3$ não são todos iguais?
-Em particular, como o limiar depende das densidades $\mdens(H_i)$?
+  \label{q:assimetrico}
+  Qual é o comportamento da função limiar $\hat{p}(n)$ para a propriedade
+  $\Gnp \xrightarrow{\mathrm{can}} (H_1, H_2, H_3)$
+  quando $H_1$, $H_2$ e $H_3$ não são todos iguais?
+  Em particular, como o limiar depende das densidades $\mdens(H_i)$?
 \end{question}
 
 % ============================================================
@@ -484,70 +512,118 @@ Em particular, como o limiar depende das densidades $\mdens(H_i)$?
 
 Queremos determinar o limiar exato para a propriedade $\Gnp \xrightarrow{\mathrm{can}} (K_3,K_4,K_5)$.
 Note que, para $p \ll n^{-1/\mdens(K_3)} = n^{-1/2}$, o grafo aleatório \whp\ não possui triângulos, tornando a propriedade trivialmente falsa (através de uma coloração arco-íris, por exemplo).
-Por outro lado, para $p \gg n^{-1/\mdens(K_5)} = n^{-1/3}$, a existência de um $K_5$ canônico é garantida \whp, o que força a existência de uma das estruturas proibidas.
+Por outro lado, para $p \gg n^{-1/\mdens(K_5)} = n^{-1/3}$, a existência de um $K_5$ canônico é garantida assintoticamente quase certamente (a.q.c.), o que força a existência de uma das estruturas proibidas.
 
-O resultado principal que buscamos formalizar é que o limiar coincide com o do clique mais denso.
-Para a prova do $0$-enunciado, precisaremos das seguintes definições estruturais:
-
-\begin{definition}[$H$-fechamento]
-\label{def:H-fechado}
-Dado um grafo $G$ e um grafo $H$, dizemos que:
-\begin{itemize}
-  \item Uma aresta $e \in E(G)$ é \textbf{$H$-fechada} se pertence a pelo menos duas cópias de $H$ em $G$.
-  \item Uma cópia $H' \subseteq G$ de $H$ é \textbf{$H$-fechada} se pelo menos três de suas arestas são $H$-fechadas.
-  \item O grafo $G$ é \textbf{$H$-fechado} se todo vértice e toda aresta de $G$ pertencem a pelo menos uma cópia de $H$, e toda cópia de $H$ em $G$ é $H$-fechada.
-\end{itemize}
-\end{definition}
-
-\begin{definition}[$H$-Bloco]
-\label{def:H-bloco}
-Um grafo $G$ é um \textbf{$H$-bloco} se $G$ é $H$-fechado e, para todo subconjunto próprio não-vazio de arestas $E' \subsetneq E(G)$, existe uma cópia $H'$ de $H$ em $G$ tal que $E(H') \cap E' \ne \emptyset$ e $E(H') \setminus E' \ne \emptyset$.
-\end{definition}
-
-\begin{remark}
-A chave do framework de Nenadov et al.\ é que, quando $p \ll n^{-1/\maxdens(H)}$, os $H$-blocos presentes em $\Gnp$ têm tamanho $O(1)$ \whp.
-\end{remark}
+O resultado principal que buscamos formalizar é o seguinte:
 
 \begin{theorem}
+  \label{thm:main-can}
   Existe um limiar semi-agudo para a propriedade $\Gnp \xrightarrow{\mathrm{can}} (K_3,K_4,K_5)$ em $\hat{p}(n) = n^{-1/3}$. Ou seja, existem constantes $c, C > 0$ tais que:
   \[
-  \lim_{n \to \infty} \mathbb{P}(\Gnp \xrightarrow{\mathrm{can}} (K_3,K_4,K_5)) = 
-  \begin{cases}
-    1 & \text{se } p \ge C n^{-1/3}, \\
-    0 & \text{se } p \le c n^{-1/3}.  
-  \end{cases}
+    \lim_{n \to \infty} \mathbb{P}(\Gnp \xrightarrow{\mathrm{can}} (K_3,K_4,K_5)) =
+    \begin{cases}
+      1 & \text{se } p \ge C n^{-1/3}, \\
+      0 & \text{se } p \le c n^{-1/3}.
+    \end{cases}
   \]
 \end{theorem}
 
-\begin{proof}[Esboço da Prova]
-  O $1$-enunciado segue do Teorema de Kam\v{c}ev--Schacht~\cite{kamcev2023canonical}.
+Para a prova do Teorema~\ref{thm:main-can}, utilizamos os conceitos de $H$-fechamento (Definição~\ref{def:H-fechado}) e $H$-bloco (Definição~\ref{def:H-bloco}). A ponte probabilística fundamental que conecta o limite macroscópico do grafo aleatório $\Gnp$ aos blocos de tamanho pequeno é dada pelo seguinte resultado de Nenadov et al.~\cite{nenadov2017algorithmic}, cuja prova é baseada no método de recipientes (containers) hipergráficos e foi aplicada a problemas de Ramsey aleatórios por Nenadov e Steger~\cite{nenadov2016short}:
 
-  Para o $0$-enunciado, descrevemos o algoritmo \textsc{ColoraçãoCan} que, dado $G$ com $\maxdens(G) < 3$, constrói explicitamente uma coloração das arestas de $G$ sem $K_3$ monocromático, $K_4$ arco-íris ou $K_5$ lexicográfico.
+\begin{theorem}[\cite{nenadov2017algorithmic}, Lemma 3.1]
+  \label{thm:nenadov-steger}
+  Sejam $H$ um grafo estritamente $2$-balanceado e $c > 0$ uma constante suficientemente pequena. Se $p \le c n^{-1/m_2(H)}$, então com alta probabilidade toda componente conexa do $H$-fechamento de $\Gnp$ tem ordem limitada por uma constante $C_0 = C_0(c)$. Em particular, cada $H$-bloco de $\Gnp$ tem tamanho $O(1)$ \whp.
+\end{theorem}
 
-  \textbf{Passo 1 --- Coloração Lexicográfica Inicial.}
-  Fixamos uma ordenação total $\sigma: V(G) \to [n]$ e uma atribuição $\varphi: V(G) \to \mathbb{N}$.
-  Definimos a coloração min-lex $\chi: E(G) \to \mathbb{N}$ por
-  \[ \chi(uv) \;:=\; \varphi\!\bigl(\min_\sigma\{u,v\}\bigr), \]
-  ou seja, a cor de cada aresta é determinada pelo vértice de menor índice segundo $\sigma$.
-  Por construção, $\chi$ é uma coloração min-lex e satisfaz:
+Apresentamos a demonstração completa do Teorema~\ref{thm:main-can} com base nessa estrutura:
+
+\begin{proof}[Demonstração do Teorema~\ref{thm:main-can}]
+  Dividimos a prova em duas partes, demonstrando primeiro o enunciado de $1$ (limite superior) e em seguida o de $0$ (limite inferior).
+
+  \medskip
+  \noindent\textbf{1. O $1$-enunciado ($p \ge C n^{-1/3}$):}
+  Queremos provar que, para uma constante $C$ suficientemente grande, o grafo aleatório $G \sim \Gnp$ satisfaz a propriedade Ramsey assimétrica $G \xrightarrow{\mathrm{can}} (K_3, K_4, K_5)$ com alta probabilidade.
+  Para tanto, estabelecemos a seguinte redução de dominância matemática: a validade da propriedade Ramsey canônica simétrica $G \xrightarrow{\mathrm{can}} K_5$ implica diretamente a validade da propriedade assimétrica $G \xrightarrow{\mathrm{can}} (K_3, K_4, K_5)$.
+  De fato, seja $\chi: E(G) \to \mathbb{N}$ uma coloração arbitrária das arestas de $G$. Se $G \xrightarrow{\mathrm{can}} K_5$, então existe por definição uma cópia $H \subseteq G$ de $K_5$ ($H \cong K_5$) que é canônica sob $\chi$. Analisamos os três cenários possíveis para esta cópia canônica $H$:
   \begin{itemize}
-    \item não existe $K_3$ monocromático sob $c$;
-    \item não existe $K_4$ arco-íris sob $c$.
+    \item \textbf{Cenário 1 ($H$ é monocromática):} Todas as $10$ arestas de $H$ possuem a mesma cor sob $\chi$. Neste caso, qualquer triângulo $K_3$ contido em $H$ possui suas $3$ arestas coloridas com a mesma cor, configurando uma cópia monocromática de $K_3$ em $G$.
+    \item \textbf{Cenário 2 ($H$ é arco-íris):} As $10$ arestas de $H$ possuem cores duas a duas distintas sob $\chi$. Consequentemente, qualquer sub-clique $K_4 \subseteq H$ possui suas $6$ arestas coloridas com cores duas a duas distintas, configurando uma cópia arco-íris de $K_4$ em $G$.
+    \item \textbf{Cenário 3 ($H$ é lexicográfica min-lex):} Por definição de cópia canônica de $K_5$ (uma vez excluída a cópia max-lex por convenção de simetria de ordenação total), o grafo $G$ contém uma cópia lexicográfica min-lex de $K_5$ sob $\chi$.
   \end{itemize}
-  O problema é que toda cópia de $K_5$ em $G$ é lexicográfica (min-lex) sob $\chi$ --- exatamente a estrutura proibida que precisamos eliminar.
+  Como a existência de um $K_5$ canônico sob $\chi$ implica necessariamente a presença de um $K_3$ monocromático, de um $K_4$ arco-íris ou de um $K_5$ lexicográfico min-lex, a implicação $(G \xrightarrow{\mathrm{can}} K_5) \implies (G \xrightarrow{\mathrm{can}} (K_3, K_4, K_5))$ está demonstrada.
+  Sob o Teorema de Kamčev--Schacht~\cite{kamcev2023canonical} (Teorema~\ref{thm:kamcev} com $\ell = 5$), o limiar para a propriedade canônica simétrica $\Gnp \xrightarrow{\mathrm{can}} K_5$ ocorre exatamente em $\hat{p}(n) = n^{-1/\mdens(K_5)} = n^{-1/3}$.
+  Desta forma, para $p \ge C n^{-1/3}$ com $C$ suficientemente grande, temos $\Gnp \xrightarrow{\mathrm{can}} K_5$ \whp, o que garante a validade da propriedade Ramsey assimétrica $\Gnp \xrightarrow{\mathrm{can}} (K_3, K_4, K_5)$ \whp, completando a prova do $1$-enunciado.
 
-  \textbf{Passo 2 --- Remoção de Arestas Livres.}
-  Removemos de $G$ todas as arestas que não pertencem a nenhuma cópia de $K_5$.
-  Seja $G' \subseteq G$ o grafo resultante. As arestas removidas mantêm a coloração $\chi$ do Passo~1 e não causam problemas.
+  \medskip
+  \noindent\textbf{2. O $0$-enunciado ($p \le c n^{-1/3}$):}
+  Queremos construir \whp\ uma coloração válida de $G \sim \Gnp$ que evite simultaneamente as três configurações proibidas.
+  Visto que $p \le c n^{-1/3} = c n^{-1/\mdens(K_5)}$, aplicamos o Teorema~\ref{thm:nenadov-steger} para o grafo estritamente $2$-balanceado $H = K_5$ (onde $\mdens(K_5) = 3$). Logo, com alta probabilidade, toda componente conexa de seu $K_5$-fechamento (e portanto cada $K_5$-bloco $B_j$ contido em $G$) possui tamanho $O(1)$.
+  Além disso, a densidade máxima de cada bloco satisfaz $\maxdens(B_j) < 3$ \whp\ (pois o surgimento de subgrafos densos de tamanho pequeno com $\maxdens \ge 3$ sob o regime $p \le c n^{-1/3}$ possui probabilidade tendendo a zero para $c > 0$ suficientemente pequeno).
+  A coloração das arestas de $G$ é definida de forma determinística utilizando o algoritmo \textsc{ColoraçãoCan}:
 
-  \textbf{Passo 3 --- Decomposição em $K_5$-Blocos.}
-  Decompomos $G'$ em seus $K_5$-blocos (Definição~\ref{def:H-bloco}).
-  Como $\maxdens(G) < \mdens(K_5) = 3$, cada $K_5$-bloco tem tamanho $O(1)$.
+  \begin{algorithm}[H]
+    \caption{\textsc{ColoraçãoCan}$(G = (V, E),\; \sigma)$}
+    \label{alg:coloracao-can}
+    \begin{algorithmic}[1]
+      \State $\hat{G} \leftarrow G$
+      \State $\mathrm{col} \leftarrow 0$
+      \While{$\exists\, e_1, e_2 \in E(\hat{G})$ : $e_1 \equiv_{K_5} e_2$ em $\hat{G}$ e $e_1 \cap e_2 = \emptyset$}
+      \State colorir $e_1, e_2$ com col
+      \State $\hat{G} \leftarrow \hat{G} \setminus \{e_1, e_2\}$ e $\mathrm{col} \leftarrow \mathrm{col} + 1$
+      \EndWhile
+      \For{cada $uv \in E(\hat{G})$}
+      \State $\chi(uv) \leftarrow \varphi\!\bigl(\min_\sigma\{u,v\}\bigr)$
+      \EndFor
+      \While{$\exists\, e \in E(\hat{G})$ : $e$ não pertence a nenhuma cópia de $K_5$ em $\hat{G}$}
+      \State $\hat{G} \leftarrow \hat{G} \setminus \{e\}$
+      \EndWhile
+      \State Remover vértices isolados de $\hat{G}$
+      \State $\{B_1, \ldots, B_k\} \leftarrow K_5\text{-blocos}$ obtidos de $\hat{G}$
+      \For{cada bloco $B_j$}
+        \State colorir $B_j$ sem $K_5$ lexicográfico, $K_3$ monocromático e $K_4$ arco-íris,
+        \Statex \hspace{2.85em} usando conjunto de cores distinto dos demais blocos
+      \EndFor
+    \end{algorithmic}
+  \end{algorithm}
 
-  \textbf{Passo 4 --- Recoloração dos Blocos.}
-  Para cada $K_5$-bloco $B$, substituímos $\chi|_{E(B)}$ por uma nova coloração $\chi'$ (construída indutivamente) que evita $K_5$ lexicográfico, sem introduzir $K_3$ monocromático ou $K_4$ arco-íris.
-  A existência de tal coloração em cada bloco é garantida pelo Lema~\ref{lem:0-statement-K5} abaixo.
+  O algoritmo particiona as arestas de $G$ em três classes principais: as arestas que não pertencem a nenhuma cópia de $K_5$ (que recebem cores únicas e exclusivas no passo 8), as arestas equivalentes desmembradas no passo 3, e as arestas restantes nos blocos isolados de tamanho pequeno $B_j$.
+  Toda cópia de $K_5$ em $G$ está contida inteiramente em algum $K_5$-bloco $B_j$. Como colorimos cada bloco $B_j$ com conjuntos de cores disjuntos dos demais e de qualquer outra aresta fora de $B_j$, qualquer potencial cópia de $K_3$ monocromático, $K_4$ arco-íris ou $K_5$ lexicográfico no grafo global deve estar inteiramente contida dentro de um único bloco $B_j$.
+  Porém, como cada bloco $B_j$ possui tamanho $O(1)$ e satisfaz $\maxdens(B_j) < 3$ \whp, o Lema~\ref{lem:0-statement-K5} garante que cada $B_j$ admite uma coloração válida livre de tais estruturas proibidas. As demais arestas de floresta e conexões externas recebem cores únicas exclusivas, impossibilitando a formação de novos triângulos monocromáticos ou padrões lexicográficos.
+  Assim, a coloração resultante é válida livre de $K_3$ monocromático, $K_4$ arco-íris e $K_5$ lexicográfico com alta probabilidade, o que prova o $0$-enunciado e conclui o teorema.
 \end{proof}
+
+\begin{definition}[Função de penalidade]
+  \label{def:penalidade}
+  Dado um grafo $G$, definimos a sua penalidade como:
+  \[
+    p(G) \;:=\; e(G) - 3\,v(G) + 5.
+  \]
+\end{definition}
+
+A função $p$ é normalizada de forma que o $K_5$ inicial tenha penalidade nula:
+\[
+  p(K_5) = 10 - 3 \cdot 5 + 5 = 0.
+\]
+A condição de densidade máxima $\maxdens(B) < 3$ garante que $e(G) \le 3\,v(G) - 1$ para qualquer subgrafo $G \subseteq B$, o que implica $p(G) \le 4$. Esta limitação superior uniforme $p(B) \le 4$ é crucial para controlar a complexidade estrutural do bloco.
+
+Seguindo as estratégias de Nenadov et al.~\cite{nenadov2017algorithmic} e~\cite{AntiComplete}, a construção indutiva de subgrafos de $B$ a partir de um subgrafo base $H_0 \cong K_5$ (ou $K_6$) é classificada em quatro tipos estruturais de expansão:
+
+\begin{itemize}
+  \item \textbf{$R_\ell$ (Expansão regular):} Adicionam-se $3$ novos vértices e $9$ novas arestas que, juntamente com uma aresta existente, formam um novo $K_5$. Neste caso, a variação da penalidade é $\Delta p = 9 - 3(3) = 0$.
+  \item \textbf{$T_\ell$ (Expansão sobre triângulo):} Adicionam-se $2$ novos vértices e $7$ novas arestas que, apoiadas em um triângulo preexistente, completam um novo $K_5$. Aqui, $\Delta p = 7 - 3(2) = 1$.
+  \item \textbf{$Q_\ell$ (Expansão sobre $K_4$):} Adiciona-se $1$ novo vértice ligado a um $K_4$ existente através de $4$ novas arestas, completando um $K_5$. O incremento é $\Delta p = 4 - 3(1) = 1$.
+  \item \textbf{$U_\ell$ (União sobre $K_5^-$):} Não se adicionam vértices; apenas $1$ nova aresta é inserida conectando dois vértices de um $K_5$ quase completo ($K_5 \setminus \{e\}$) já presente na estrutura. A variação é $\Delta p = 1 - 3(0) = 1$.
+\end{itemize}
+
+\begin{remark}
+  \textbf{Compatibilidade com a definição de Bloco:} Como toda cópia de $K_5$ em um $K_5$-bloco $B$ deve ser $K_5$-fechada (ou seja, ter pelo menos $3$ arestas $K_5$-fechadas que pertencem a outras cópias de $K_5$ no bloco), a expansão regular $R_\ell$ (que compartilha apenas uma única aresta com a estrutura existente) não pode ocorrer isoladamente na construção interna de um $K_5$-bloco $B$ fechado. Ela é utilizada apenas para conectar blocos diferentes ou partes florestais em árvore do grafo global $G$. Portanto, a construção indutiva de um $K_5$-bloco $B$ consiste exclusivamente de passos degenerados $T_\ell$, $Q_\ell$ e $U_\ell$.
+\end{remark}
+
+As expansões degeneradas ($T_\ell$, $Q_\ell$ e $U_\ell$) aumentam a penalidade estritamente em $1$. Como iniciamos com $p(H_0) = 0$ e $p(B) \le 4$, concluímos que o número total destas expansões na construção do bloco $B$ é de no máximo $4$.
+
+% ============================================================
+% RESULTADOS AUXILIARES E ENUNCIADOS
+% ============================================================
 
 \begin{lemma}
   \label{lem:0-statement-K5}
@@ -559,645 +635,414 @@ A chave do framework de Nenadov et al.\ é que, quando $p \ll n^{-1/\maxdens(H)}
   \end{enumerate}
 \end{lemma}
 
-\begin{proof}
-
-\noindent\textit{A coloração auxiliar de $K_5$.}
-
-Seja $B$ um $K_5$-bloco com $\maxdens(B) < 3$.
-Consideramos uma ordenação $\sigma$ dos vértices de $B$ e a coloração lexicográfica min-lex
-$\chi(uv) := \varphi(\min_\sigma\{u,v\})$.
-
-O ponto de partida é uma única cópia $H_0 \cong K_5$ com vértices ordenados $v_1 < v_2 < v_3 < v_4 < v_5$.
-Sob a coloração min-lex, as cores das arestas são distribuídas como segue:
-
-\medskip
-\medskip
-\begin{center}
-\begin{tikzpicture}[scale=1.3,
-  vx/.style={circle,draw,fill=white,minimum size=16pt,font=\small}]
-  % K5 vertices as regular pentagon
-  \node[vx] (1) at (90:1.5)  {$v_1$};
-  \node[vx] (2) at (18:1.5)  {$v_2$};
-  \node[vx] (3) at (-54:1.5) {$v_3$};
-  \node[vx] (4) at (-126:1.5){$v_4$};
-  \node[vx] (5) at (162:1.5) {$v_5$};
-  % color a = phi(v1): edges 12,13,14,15
-  \draw[line width=1.8pt, red]    (1)--(2);
-  \draw[line width=1.8pt, red]    (1)--(3);
-  \draw[line width=1.8pt, red]    (1)--(4);
-  \draw[line width=1.8pt, red]    (1)--(5);
-  % color b = phi(v2): edges 23,24,25
-  \draw[line width=1.8pt, blue]   (2)--(3);
-  \draw[line width=1.8pt, blue]   (2)--(4);
-  \draw[line width=1.8pt, blue]   (2)--(5);
-  % color c = phi(v3): edges 34,35
-  \draw[line width=1.8pt, teal]   (3)--(4);
-  \draw[line width=1.8pt, teal]   (3)--(5);
-  % color d = phi(v4): edge 45
-  \draw[line width=1.8pt, orange] (4)--(5);
-\end{tikzpicture}
-\end{center}
-
-\noindent
-É fácil verificar que toda cópia de $K_5$ sob $\chi$ é lexicográfica (min-lex).
-
-Definimos agora uma \textbf{coloração auxiliar de duas cores} $\chi': E(B) \to \{\text{claro}, \text{escuro}\}$
-(representadas como vermelho e azul nos diagramas) que servirá de base para a recoloração dos $K_5$-blocos.
-Sobre o $K_5$ inicial $H_0$, $\chi'$ é definida identificando os $10$ arestas de $K_5$ com as $10$ arestas de
-duas cópias de $C_5$: o \textbf{pentágono externo} (as arestas $v_1v_2, v_2v_3, v_3v_4, v_4v_5, v_5v_1$)
-e o \textbf{pentágono interno} (as diagonais $v_1v_3, v_3v_5, v_5v_2, v_2v_4, v_4v_1$).
-
-\begin{center}
-\begin{tikzpicture}[scale=1.3,
-  vx/.style={circle,draw,fill=white,minimum size=16pt,font=\small}]
-  \node[vx] (1) at (90:1.5)  {$v_1$};
-  \node[vx] (2) at (18:1.5)  {$v_2$};
-  \node[vx] (3) at (-54:1.5) {$v_3$};
-  \node[vx] (4) at (-126:1.5){$v_4$};
-  \node[vx] (5) at (162:1.5) {$v_5$};
-  % outer C5 (pentagon) -- claro = vermelho
-  \draw[line width=2pt, red]  (1)--(2)--(3)--(4)--(5)--(1);
-  % inner C5 (pentagram) -- escuro = azul
-  \draw[line width=2pt, blue] (1)--(3)--(5)--(2)--(4)--(1);
-\end{tikzpicture}
-\end{center}
-
-\noindent
-Verifica-se diretamente que $\chi|_{H_0}$ é uma coloração própria de $H_0$ (todo vértice tem grau $2$ em cada $C_5$),
-não possui $K_3$ monocromático, não possui $K_4$ arco-íris, e não possui $K_5$ lexicográfico.
-
-
-\medskip
-\noindent\textit{Função de penalidade e tipos de expansão.}
-
-Para controlar a estrutura dos $K_5$-blocos durante a construção indutiva,
-introduzimos a seguinte medida adaptada de~\cite{AntiComplete}:
-
-\begin{definition}[Função de penalidade]
-Dado um grafo $G$, definimos
-\[
-  p(G) \;:=\; e(G) - 3\,v(G) + 5.
-\]
-\end{definition}
-
-A função $p$ é normalizada de forma que o $K_5$ inicial tenha penalidade nula:
-\[
-  p(K_5) = 10 - 3 \cdot 5 + 5 = 0.
-\]
-Além disso, a condição de densidade $\maxdens(G) < 3$ garante que $e(G) < 3\,v(G)$, o que implica
-$e(G) \le 3\,v(G) - 1$. Portanto, $p(G) \le 4$ para qualquer subgrafo de $B$. Essa limitação superior é crucial para controlar a 
-complexidade estrutural do bloco.
-
-A construção de um $K_5$-bloco $B$ pode ser vista como um processo indutivo. Começamos com uma 
-cópia base $H_0 \cong K_5$ e, a cada passo, anexamos novos vértices e arestas para formar novas 
-cópias de $K_5$. Seguindo as estratégias desenvolvidas em~\cite{nenadov2017algorithmic} e \cite{AntiComplete},
-classificamos essas extensões em quatro tipos estruturais (ver analogia aos casos de expansão):
-
-\begin{itemize}
-  \item \textbf{$R_\ell$ (Expansão regular):} Adicionam-se $3$ novos vértices e $9$ novas arestas que, juntamente 
-    com uma aresta já existente, formam um novo $K_5$. 
-    Neste caso, a variação da penalidade é $\Delta p = 9 - 3(3) = 0$, ou seja, a penalidade do 
-    grafo se mantém inalterada.
-
-  \item \textbf{$T_\ell$ (Expansão sobre triângulo):} Adicionam-se $2$ novos vértices e $7$ novas arestas que, 
-    apoiadas em um triângulo preexistente, completam um novo $K_5$. 
-    Aqui, o incremento na penalidade é $\Delta p = 7 - 3(2) = 1$.
-
-  \item \textbf{$Q_\ell$ (Expansão sobre $K_4$):} Adiciona-se apenas $1$ novo vértice ligado a um $K_4$ 
-    existente através de $4$ novas arestas, completando um $K_5$. 
-    O incremento é $\Delta p = 4 - 3(1) = 1$.
-
-  \item \textbf{$U_\ell$ (União sobre $K_5^-$):} Não se adicionam vértices; apenas $1$ nova aresta é 
-    inserida conectando dois vértices de um $K_5$ quase completo ($K_5 \setminus \{e\}$) já 
-    presente na estrutura. 
-    A variação é $\Delta p = 1 - 3(0) = 1$.
-\end{itemize}
-
-Uma observação fundamental é que a expansão \textbf{$R_\ell$} (a única que é considerada "regular") 
-preserva o valor de $p(G)$. Por outro lado, as expansões degeneradas (\textbf{$T_\ell$}, \textbf{$Q_\ell$} e \textbf{$U_\ell$}) 
-aumentam a penalidade estritamente em $1$. Como iniciamos com $p(H_0) = 0$ e sabemos que $p(B) \le 4$, concluímos 
-que o número total de ocorrências dos casos $T_\ell$, $Q_\ell$ e $U_\ell$ na construção do bloco é uniformemente 
-limitado (ocorrem no máximo $4$ vezes em todo o processo).
-
-\medskip
-\noindent\textit{Extensão da coloração auxiliar para cada tipo de expansão.}
-\medskip
-
-\noindent\textbf{Caso $R_\ell$ (expansão regular).}
-Em $R_\ell$, uma nova cópia de $K_5$ é colada à estrutura existente por uma aresta $e$ já colorida.
-Identificamos os dois $C_5$ na nova cópia de modo que $e$ pertença ao $C_5$ da sua cor.
-A coloracão é compatível com o bloco anterior.
-No diagrama abaixo, dois $K_5$ são colados pela aresta $1$--$2$ (vermelha):
-
-\medskip
-\begin{center}
-\begin{tikzpicture}[scale=1.0,
-  vx/.style={circle,draw,fill=white,minimum size=13pt,font=\tiny\strut}]
-  \node[vx] (v1) at (0, 0.9)   {$1$};
-  \node[vx] (v2) at (0,-0.9)   {$2$};
-  \node[vx] (v5) at (-1.4, 1.6){$5$};
-  \node[vx] (v4) at (-2.0, 0)  {$4$};
-  \node[vx] (v3) at (-1.4,-1.6){$3$};
-  \node[vx] (v8) at ( 1.4, 1.6){$8$};
-  \node[vx] (v7) at ( 2.0, 0)  {$7$};
-  \node[vx] (v6) at ( 1.4,-1.6){$6$};
-  % Left K5: Red outer C5: 1-5-4-3-2-1
-  \draw[red, line width=1.8pt]  (v1)--(v5)--(v4)--(v3)--(v2);
-  % Left K5: Blue inner C5: 1-4-2-5-3-1
-  \draw[blue, line width=1.8pt] (v1)--(v4) (v4)--(v2) (v2)--(v5) (v5)--(v3) (v3)--(v1);
-  % Right K5: Red outer C5: 1-8-7-6-2-1
-  \draw[red, line width=1.8pt]  (v1)--(v8)--(v7)--(v6)--(v2);
-  % Right K5: Blue inner C5: 1-7-2-8-6-1
-  \draw[blue, line width=1.8pt] (v1)--(v7) (v7)--(v2) (v2)--(v8) (v8)--(v6) (v6)--(v1);
-  % Shared edge highlighted
-  \draw[red, line width=3pt] (v1)--(v2);
-  \node[font=\tiny] at (0.25,0) {$e$};
-\end{tikzpicture}
-\end{center}
-
-\medskip
-\noindent\textbf{Caso $T_\ell$ (expansão sobre triângulo).}
-Em $T_\ell$, dois novos vértices $u, v$ com a aresta $uv$ são ligados a um triângulo $\{a,b,c\}$ existente.
-Identificamos um $P_2$ monocromático no triângulo (sempre existe por paridade) e extendemos
-ao $C_5$ da sua cor; as cinco arestas restantes formam o $C_5$ da outra cor.
-Se o $P_2$ vermelho é $a$--$b$--$c$, então: $C_5$ vermelho $= a\text{-}b\text{-}c\text{-}y\text{-}x\text{-}a$;
-$C_5$ azul $= a\text{-}c\text{-}x\text{-}b\text{-}y\text{-}a$.
-
-\medskip
-\begin{center}
-\begin{tikzpicture}[scale=1,
-  vx/.style={circle,draw,fill=white,minimum size=13pt,font=\tiny\strut},
-  ov/.style={circle,draw,fill=gray!25,minimum size=13pt,font=\tiny\strut}]
-
-%================================================
-% K5 com coordenadas explícitas
-%================================================
-
-\node[ov] (A) at (0,1.8)    {$a$};
-\node[ov] (B) at (1.7,0.6)  {$b$};
-\node[ov] (C) at (1.0,-1.4) {$c$};
-\node[vx] (U) at (-1.0,-1.4) {$u$};
-\node[vx] (V) at (-1.7,0.6) {$v$};
-
-% vermelho: a-b-c-u-v-a
-\draw[red, line width=1.8pt]
-(A)--(B)--(C)--(U)--(V)--(A);
-
-% azul: a-c-v-b-u-a
-\draw[blue, line width=1.8pt]
-(A)--(C)
-(C)--(V)
-(V)--(B)
-(B)--(U)
-(U)--(A);
-
-%================================================
-% vértices extras x,y à direita
-%================================================
-
-\node[vx] (X) at (4.0,0.8)  {$x$};
-\node[vx] (Y) at (4.0,-0.8) {$y$};
-
-% aresta xy
-\draw[black, line width=1.5pt] (X)--(Y);
-
-% ligações ao triângulo abc
-\draw[dashed,gray]
-(X) to[bend right=20](A)
-(X)--(B)
-(X)--(C);
-
-\draw[dashed,gray]
-(Y) to[bend right=20](A)
-(Y) to[bend left=20] (B)
-(Y)--(C);
-
-\end{tikzpicture}
-\end{center}
-\medskip
-\noindent\textbf{Caso $Q_\ell$ (expansão sobre $K_4$).}
-Em $Q_\ell$, um novo vértice $v$ é ligado a todos os vértices de um $K_4$ existente $\{a,b,c,d\}$.
-O $K_4$ possui dois $P_3$ monocromáticos; tomamos o $P_3$ vermelho $a$--$b$--$c$--$d$ e extendemos:
-$C_5$ vermelho $= a\text{-}b\text{-}c\text{-}d\text{-}v\text{-}a$;
-$C_5$ azul $= a\text{-}c\text{-}v\text{-}b\text{-}d\text{-}a$.
-
-\medskip
-\begin{center}
-\begin{tikzpicture}[scale=1,
-  vx/.style={circle,draw,fill=white,minimum size=13pt,font=\tiny\strut},
-  ov/.style={circle,draw,fill=gray!25,minimum size=13pt,font=\tiny\strut}]
-
-%================================================
-% K5
-%================================================
-
-\node[ov] (A) at (0,1.8)     {$a$};
-\node[ov] (B) at (1.7,0.6)   {$b$};
-\node[ov] (C) at (1.0,-1.4)  {$c$};
-\node[vx] (U) at (-1.0,-1.4) {$u$};
-\node[ov] (V) at (-1.7,0.6)  {$v$};
-
-% vermelho: a-b-c-u-v-a
-\draw[red, line width=1.8pt]
-(A)--(B)--(C)--(U)--(V)--(A);
-
-% azul: a-c-v-b-u-a
-\draw[blue, line width=1.8pt]
-(A)--(C)
-(C)--(V)
-(V)--(B)
-(B)--(U)
-(U)--(A);
-
-%================================================
-% vértice extra à direita
-%================================================
-
-\node[vx] (X) at (4.2,0) {$x$};
-
-% x ligado ao K4 abcv
-\draw[dashed,gray]
-(X) to[bend right=20] (A)
-(X)--(B)
-(X)--(C)
-(X) to[bend left=20] (V);
-
-\end{tikzpicture}
-\end{center}
-\medskip
-
-% ------------------------------------------------------------------
-% ESTRUTURA DA PROVA: enunciados e deduções
-% ------------------------------------------------------------------
+A prova do Lema~\ref{lem:0-statement-K5} utiliza as seguintes proposições e afirmações auxiliares:
 
 \begin{proposition}[Equilíbrio de cores]
-\label{prop:equilibrio}
-Seja $B$ um $K_5$-bloco com $\maxdens(B) < 3$ e $\chi'$ a coloração auxiliar construída
-indutivamente sobre as expansões de $B$. Então é possível definir $\chi'$ de modo que,
-para toda cópia $H \cong K_5$ em $B$ e todo vértice $w \in V(H)$, $w$ possui ao menos
-um vizinho com $\chi'(e) = \text{claro}$ e ao menos um vizinho com $\chi'(e) = \text{escuro}$
-dentro de $H$.
+  \label{prop:equilibrio}
+  Seja $B$ um $K_5$-bloco com $\maxdens(B) < 3$ e $\chi'$ a coloração auxiliar construída indutivamente sobre as expansões de $B$. Então é possível definir $\chi'$ de modo que, para toda cópia $H \cong K_5$ em $B$ e todo vértice $w \in V(H)$, $w$ possui ao menos um vizinho com $\chi'(e) = \text{claro}$ e ao menos um vizinho com $\chi'(e) = \text{escuro}$ dentro de $H$.
 \end{proposition}
 
-\noindent
-Para provar a Proposição~\ref{prop:equilibrio}, estabelecemos duas afirmações auxiliares.
-
 \begin{afirmacao}[Expansões de vértice preservam o equilíbrio]
-\label{afirm:vertex-exp}
-A propriedade da Proposição~\ref{prop:equilibrio} é preservada em cada passo dos tipos
-$R_\ell$, $T_\ell$ e $Q_\ell$.
+  \label{afirm:vertex-exp}
+  A propriedade da Proposição~\ref{prop:equilibrio} é preservada em cada passo dos tipos $R_\ell$, $T_\ell$ e $Q_\ell$.
 \end{afirmacao}
 
 \begin{afirmacao}[Limitação de $U_\ell$]
-\label{afirm:ulimit}
-Na construção de qualquer $K_5$-bloco $B$ com $\maxdens(B) < 3$,
-o número de expansões do tipo $U_\ell$ é no máximo $2$.
+  \label{afirm:ulimit}
+  Na construção de qualquer $K_5$-bloco $B$ com $\maxdens(B) < 3$, o número de expansões do tipo $U_\ell$ é no máximo $2$.
 \end{afirmacao}
-
-\begin{proof}[Prova da Proposição~\ref{prop:equilibrio}]
-Pela Afirmação~\ref{afirm:vertex-exp}, a propriedade de equilíbrio é mantida a cada
-expansão dos tipos $R_\ell$, $T_\ell$ e $Q_\ell$.
-Pela Afirmação~\ref{afirm:ulimit}, o número de passos $U_\ell$ é limitado;
-e cada passo $U_\ell$ apenas adiciona uma aresta, sem alterar a propriedade já garantida para
-os três vizinhos existentes de cada extremidade (como detalhado na prova da Afirmação~\ref{afirm:ulimit}).
-Portanto, $\chi'$ pode ser construída de modo que a propriedade vale após todos os passos.
-\end{proof}
 
 \begin{afirmacao}[$\chi''$ é uma coloração válida]
-\label{afirm:chipp}
-Dadas $\chi$ e $\chi'$ como acima, a coloração
-\[
-  \chi'': E(B) \;\longrightarrow\; \mathbb{N} \times \{\text{claro}, \text{escuro}\},
-  \qquad \chi''(e) := \bigl(\chi(e),\, \chi'(e)\bigr),
-\]
-evita $K_3$ monocromático, $K_4$ arco-íris e $K_5$ lexicográfico.
-Em particular, $\chi''$ é uma $(K_3, K_4, K_5)$-coloração válida de $B$,
-o que conclui a prova do Lema~\ref{lem:0-statement-K5}.
+  \label{afirm:chipp}
+  Dadas $\chi$ e $\chi'$ como acima, a coloração $\chi''(e) := (\chi(e), \chi'(e))$ evita $K_3$ monocromático, $K_4$ arco-íris e $K_5$ lexicográfico.
 \end{afirmacao}
 
-\begin{proof}
-Assumimos que $\chi'$ satisfaz a Proposição~\ref{prop:equilibrio} e verificamos cada condição
-separadamente.
+% ============================================================
+% DEMONSTRAÇÃO DO LEMA PRINCIPAL E AUXILIARES
+% ============================================================
 
-\begin{itemize}
-  \item Sob $\chi$, toda cópia de $K_5$ é lexicográfica: as quatro arestas $v_1v_j$
-  incidentes ao vértice mínimo $v_1$ recebem todas a mesma cor $\chi(v_1v_j) = \varphi(v_1)$.
-  Para que o $K_5$ seja também min-lex sob $\chi''$, seria necessário que todas essas
-  arestas tivessem o mesmo valor de $\chi'$. Isso é impossível pela
-  Proposição~\ref{prop:equilibrio}, que garante que $v_1$ possui ao menos uma aresta
-  clara e uma escura dentro de qualquer cópia de $K_5$. Portanto, não existe
-  $K_5$ lexicográfico sob $\chi''$.
-
-  \item Considere um $K_4$ com vértice mínimo $w$. As três arestas $wu_i$ incidentes
-  a $w$ recebem todas a mesma primeira componente $\chi(wu_i) = \varphi(w)$; para que
-  o $K_4$ fosse arco-íris sob $\chi''$, essas três arestas precisariam ser duas a duas
-  distintas na segunda componente $\chi'$. Como só há duas cores em $\chi'$, ao menos
-  duas delas coincidem em $\chi'$ e, portanto, em $\chi''$. Logo, não existe
-  $K_4$ arco-íris sob $\chi''$.
-
-  \item Em qualquer triângulo $x < y < z$, as arestas $xy$ e $xz$ recebem $\chi(xy) =
-  \varphi(x)$, enquanto $yz$ recebe $\chi(yz) = \varphi(y) \ne \varphi(x)$ (pois $\varphi$
-  é injetiva). Assim, $\chi''(xy) \ne \chi''(yz)$, e o triângulo não pode ser
-  monocromático sob $\chi''$.
-\end{itemize}
+\begin{proof}[Prova do Lema~\ref{lem:0-statement-K5}]
+  A coloração $\chi'' = (\chi, \chi')$ é construída combinando a coloração lexicográfica min-lex inicial $\chi$ (obtida sob uma ordenação total fixada $\sigma$) com a coloração auxiliar de duas cores $\chi'$ cuja existência e propriedades de equilíbrio são garantidas pela Proposição~\ref{prop:equilibrio}. A validade de $\chi''$ para evitar $K_3$ monocromático, $K_4$ arco-íris e $K_5$ lexicográfico é estabelecida diretamente pela Afirmação~\ref{afirm:chipp}, o que conclui a prova do Lema~\ref{lem:0-statement-K5}.
 \end{proof}
 
-\noindent
-A Afirmação~\ref{afirm:chipp} conclui a prova do Lema~\ref{lem:0-statement-K5}.
-
+\begin{proof}[Prova da Proposição~\ref{prop:equilibrio}]
+  Pela Afirmação~\ref{afirm:vertex-exp}, a propriedade de equilíbrio é mantida a cada expansão dos tipos $R_\ell$, $T_\ell$ e $Q_\ell$. Pela Afirmação~\ref{afirm:ulimit}, o número de passos $U_\ell$ é no máximo $2$. Como cada passo $U_\ell$ apenas adiciona uma aresta a um $K_5^-$ existente, ele preserva as conexões e a coloração auxiliar já estabelecida para as demais arestas de cada vértice dentro daquela cópia de $K_5$. Portanto, a propriedade de equilíbrio é garantida para todas as cópias após todos os passos de construção, completando a prova da Proposição~\ref{prop:equilibrio}.
 \end{proof}
+
+\begin{proof}[Prova da Afirmação~\ref{afirm:chipp} ($\chi''$ é uma coloração válida)]
+  Assumimos que $\chi'$ satisfaz a propriedade de equilíbrio da Proposição~\ref{prop:equilibrio} e verificamos cada uma das três propriedades de validade de $\chi''$:
+
+  \medskip
+  \noindent\textbf{1. Ausência de $K_5$ lexicográfico:}
+  Sob $\chi$, toda cópia de $K_5$ em $B$ é lexicográfica min-lex. Isto significa que existe uma ordenação $\sigma$ e uma atribuição de cores de vértices $\varphi$ tais que para todo par $uv$, $\chi(uv) = \varphi(\min_\sigma\{u,v\})$.
+  Abaixo, ilustramos este padrão lexicográfico min-lex inicial $\chi$ em uma cópia base de $K_5$:
+
+  \begin{center}
+    \begin{tikzpicture}[scale=1.3,
+        vx/.style={circle,draw,fill=white,minimum size=16pt,font=\small}]
+      % K5 vertices as regular pentagon
+      \node[vx] (1) at (90:1.5)  {$v_1$};
+      \node[vx] (2) at (18:1.5)  {$v_2$};
+      \node[vx] (3) at (-54:1.5) {$v_3$};
+      \node[vx] (4) at (-126:1.5){$v_4$};
+      \node[vx] (5) at (162:1.5) {$v_5$};
+      % color a = phi(v1): edges 12,13,14,15
+      \draw[line width=1.8pt, red]    (1)--(2);
+      \draw[line width=1.8pt, red]    (1)--(3);
+      \draw[line width=1.8pt, red]    (1)--(4);
+      \draw[line width=1.8pt, red]    (1)--(5);
+      % color b = phi(v2): edges 23,24,25
+      \draw[line width=1.8pt, blue]   (2)--(3);
+      \draw[line width=1.8pt, blue]   (2)--(4);
+      \draw[line width=1.8pt, blue]   (2)--(5);
+      % color c = phi(v3): edges 34,35
+      \draw[line width=1.8pt, teal]   (3)--(4);
+      \draw[line width=1.8pt, teal]   (3)--(5);
+      % color d = phi(v4): edge 45
+      \draw[line width=1.8pt, orange] (4)--(5);
+    \end{tikzpicture}
+  \end{center}
+  \noindent
+  No diagrama acima, mostramos a coloração min-lex $\chi$ de um $K_5$: as arestas incidentes ao vértice mínimo $v_1$ têm todas a mesma cor vermelha; as arestas incidentes a $v_2$ que não vão para $v_1$ têm cor azul; as arestas incidentes a $v_3$ têm cor verde (teal); e a aresta $v_4v_5$ tem cor laranja.
+
+  Para que este $K_5$ permanecesse min-lex sob o produto cartesiano $\chi'' = (\chi, \chi')$, seria necessário que todas as arestas de cor $\chi(uv)$ incidente ao vértice mínimo $v_1$ recebessem também a mesma cor auxiliar sob $\chi'$. Ou seja, deveríamos ter $\chi'(v_1v_2) = \chi'(v_1v_3) = \chi'(v_1v_4) = \chi'(v_1v_5) = \text{claro}$ (ou todos escuro), o que significa que o vértice $v_1$ teria grau $4$ na cor claro e grau $0$ na cor escuro dentro deste $K_5$.
+  No entanto, a Proposição~\ref{prop:equilibrio} garante que todo vértice (incluindo $v_1$) possui pelo menos um vizinho claro e pelo menos um vizinho escuro sob $\chi'$ dentro deste $K_5$. Portanto, nenhuma cópia de $K_5$ pode ser lexicográfica sob $\chi''$.
+
+  \medskip
+  \noindent\textbf{2. Ausência de $K_4$ arco-íris:}
+  Suponha por contradição que existe uma cópia $K_4^* \subseteq B$ que é arco-íris sob $\chi''$.
+  Isso significa que as $6$ arestas de $K_4^*$ possuem cores distintas sob o produto cartesiano $\chi'' = (\chi, \chi')$.
+  Em particular, as $6$ arestas de $K_4^*$ devem possuir cores distintas sob a projeção $\chi$.
+  Mas isso significa que $K_4^*$ é arco-íris sob a coloração inicial $\chi$.
+  Contudo, a coloração $\chi$ é construída de modo a ser livre de $K_4$ arco-íris por definição (já que $\chi$ é uma coloração min-lex sobre uma ordenação linear, e é um fato conhecido que colorações lexicográficas min-lex não contêm $K_4$ arco-íris).
+  Isso contradiz o pressuposto, logo $\chi''$ não contém $K_4$ arco-íris.
+
+  \medskip
+  \noindent\textbf{3. Ausência de $K_3$ monocromático:}
+  Suponha que existe um triângulo monocromático $T \subseteq B$ sob $\chi''$.
+  Então as $3$ arestas de $T$ devem ter a mesma cor em ambas as componentes:
+  $\chi(xy) = \chi(yz) = \chi(xz) = c_0$ e $\chi'(xy) = \chi'(yz) = \chi'(xz) = c_1$.
+  Visto que $T$ é monocromático sob $\chi$ e $\chi$ é min-lex sobre a ordenação $\sigma$, os vértices de $T$ ordenados como $x < y < z$ devem satisfazer $\chi(xy) = \chi(xz) = \varphi(x) = c_0$.
+  Para que a terceira aresta $yz$ também tenha cor $c_0$, deveríamos ter $\chi(yz) = \varphi(y) = c_0$, o que implica $\varphi(x) = \varphi(y)$ (o que viola o fato de que a coloração é construída de modo que $\varphi$ atribui cores distintas a vértices distintos em qualquer bloco $B$ pequeno de tamanho $O(1)$, pois a função $\varphi$ é injetiva sobre a ordenação $\sigma$ do bloco).
+  Assim, $\chi''(xy) \ne \chi''(yz)$, e o triângulo não pode ser monocromático sob $\chi''$, concluindo a demonstração.
+\end{proof}
+
+
+
 
 % ------------------------------------------------------------------
 % PROVAS DAS AFIRMAÇÕES AUXILIARES
 % ------------------------------------------------------------------
 
 \begin{proof}[Prova da Afirmação~\ref{afirm:vertex-exp} (Expansões de vértice)]
-A prova é por indução no número de passos de expansão na construção do bloco $B$.
-Mantemos o seguinte invariante: após cada passo, toda cópia de $K_5$ presente no grafo
-atual admite uma decomposição $E(K_5) = E(C_5^{\text{vm}}) \cup E(C_5^{\text{az}})$
-(com todo vértice de grau $2$ em cada $C_5$), e todo triângulo presente tem exatamente
-$2$ arestas de uma cor e $1$ da outra (distribuição $2$-$1$).
+  A prova é por indução no número de passos de expansão na construção do bloco $B$.
+  Mantemos o seguinte invariante: após cada passo, toda cópia de $K_5$ presente no grafo
+  atual admite uma decomposição $E(K_5) = E(C_5^{\text{claro}}) \cup E(C_5^{\text{escuro}})$
+  (com todo vértice de grau $2$ em cada $C_5$), e todo triângulo presente tem exatamente
+  $2$ arestas de uma cor e $1$ da outra (distribuição $2$-$1$).
 
-\medskip
+  \medskip
+  \noindent\textbf{Caso Base: $H_0 \cong K_5$.}
+  O caso base $H_0 \cong K_5$ com vértices $v_1 < v_2 < v_3 < v_4 < v_5$ satisfaz o invariante pela construção explícita da coloração auxiliar $\chi': E(H_0) \to \{\text{claro}, \text{escuro}\}$: definimos as cores identificando as $10$ arestas de $K_5$ com as $10$ arestas de duas cópias de $C_5$: o \textbf{pentágono externo} (as arestas $v_1v_2, v_2v_3, v_3v_4, v_4v_5, v_5v_1$) pintado na cor vermelha (cor claro) e o \textbf{pentágono interno/estrela} (as diagonais $v_1v_3, v_3v_5, v_5v_2, v_2v_4, v_4v_1$) pintado na cor azul (cor escuro).
 
-O caso base $H_0 \cong K_5$ satisfaz o invariante pela construção explícita da coloração
-auxiliar $\chi'$ descrita anteriormente.
+  \begin{center}
+    \begin{tikzpicture}[scale=1.3,
+        vx/.style={circle,draw,fill=white,minimum size=16pt,font=\small}]
+      \node[vx] (1) at (90:1.5)  {$v_1$};
+      \node[vx] (2) at (18:1.5)  {$v_2$};
+      \node[vx] (3) at (-54:1.5) {$v_3$};
+      \node[vx] (4) at (-126:1.5){$v_4$};
+      \node[vx] (5) at (162:1.5) {$v_5$};
+      % outer C5 (pentagon) -- claro = vermelho
+      \draw[line width=2pt, red]  (1)--(2)--(3)--(4)--(5)--(1);
+      % inner C5 (pentagram) -- escuro = azul
+      \draw[line width=2pt, blue] (1)--(3)--(5)--(2)--(4)--(1);
+    \end{tikzpicture}
+  \end{center}
+  \noindent
+  No diagrama acima, apresentamos a coloração auxiliar $\chi'$ de duas cores para o $K_5$ base $H_0$: o pentágono externo ($v_1\text{-}v_2\text{-}v_3\text{-}v_4\text{-}v_5\text{-}v_1$) é colorido com a cor vermelha (representando a cor 'claro' do texto), enquanto o pentágono interno (estrela) formado pelas diagonais ($v_1\text{-}v_3\text{-}v_5\text{-}v_2\text{-}v_4\text{-}v_1$) é colorido com a cor azul (representando a cor 'escuro'). Sob esta coloração, cada vértice tem grau exatamente 2 em cada cor, e todo triângulo tem exatamente 2 arestas de uma cor e 1 da outra cor, preservando o invariante.
 
-\medskip\noindent\textbf{Passo indutivo --- Caso $R_\ell$.}
-Uma nova cópia de $K_5$ é colada à estrutura existente por uma única aresta $e$ já colorida
-(digamos, $e$ é vermelha). As $9$ novas arestas ainda não possuem cor.
-Como $K_5$ se decompõe em dois $C_5$, e qualquer aresta de $K_5$ pode pertencer ao $C_5$
-de qualquer uma das duas cores, basta escolher a decomposição do novo $K_5$ de modo que
-$e$ pertença ao $C_5$ vermelho. Com isso, cada vértice do novo $K_5$ fica com grau $2$
-em cada $C_5$, e o invariante é preservado. Além disso, como a aresta compartilhada $e$
-está corretamente inserida no $C_5$ da sua cor, nenhum triângulo preexistente é afetado.
-Note que esta extensão é sempre possível, independentemente da cor de $e$, e portanto
-uma sequência arbitrariamente longa de passos $R_\ell$ preserva o invariante.
+  \medskip\noindent\textbf{Passo indutivo --- Caso $R_\ell$.}
+  Uma nova cópia de $K_5$ é colada à estrutura existente por uma única aresta $e$ já colorida (digamos, $e$ é vermelha/claro). As $9$ novas arestas adicionadas ainda não possuem cor.
+  Como $K_5$ se decompõe em dois $C_5$, e qualquer aresta de $K_5$ pode pertencer ao $C_5$ de qualquer uma das duas cores, basta escolher a decomposição do novo $K_5$ de modo que $e$ pertença ao $C_5$ claro. Com isso, cada vértice do novo $K_5$ fica com grau $2$ em cada cor, e o invariante é preservado.
 
-\medskip\noindent\textbf{Passo indutivo --- Caso $T_\ell$.}
-Dois novos vértices $u, v$ (com a aresta $uv$) são ligados a um triângulo $\{a,b,c\}$
-preexistente, formando um novo $K_5$ sobre $\{a,b,c,u,v\}$.
-Pelo invariante indutivo, o triângulo $\{a,b,c\}$ possui distribuição $2$-$1$;
-logo existe um $P_2$ monocromático, digamos o caminho vermelho $a$--$b$--$c$.
-Definimos a coloração do novo $K_5$ estendendo esse $P_2$ ao $C_5$ vermelho
-$a\text{-}b\text{-}c\text{-}u\text{-}v\text{-}a$; as cinco arestas restantes
-$\{au, bu, bv, cv, uv\} \setminus \{av\}$
-formam o $C_5$ azul $a\text{-}c\text{-}v\text{-}b\text{-}u\text{-}a$.
-Verifica-se diretamente que todo vértice tem grau $2$ em cada $C_5$, preservando o invariante.
+  \begin{center}
+    \begin{tikzpicture}[scale=1.0,
+        vx/.style={circle,draw,fill=white,minimum size=13pt,font=\tiny\strut}]
+      \node[vx] (v1) at (0, 0.9)   {$1$};
+      \node[vx] (v2) at (0,-0.9)   {$2$};
+      \node[vx] (v5) at (-1.4, 1.6){$5$};
+      \node[vx] (v4) at (-2.0, 0)  {$4$};
+      \node[vx] (v3) at (-1.4,-1.6){$3$};
+      \node[vx] (v8) at ( 1.4, 1.6){$8$};
+      \node[vx] (v7) at ( 2.0, 0)  {$7$};
+      \node[vx] (v6) at ( 1.4,-1.6){$6$};
+      % Left K5: Red outer C5: 1-5-4-3-2-1
+      \draw[red, line width=1.8pt]  (v1)--(v5)--(v4)--(v3)--(v2);
+      % Left K5: Blue inner C5: 1-4-2-5-3-1
+      \draw[blue, line width=1.8pt] (v1)--(v4) (v4)--(v2) (v2)--(v5) (v5)--(v3) (v3)--(v1);
+      % Right K5: Red outer C5: 1-8-7-6-2-1
+      \draw[red, line width=1.8pt]  (v1)--(v8)--(v7)--(v6)--(v2);
+      % Right K5: Blue inner C5: 1-7-2-8-6-1
+      \draw[blue, line width=1.8pt] (v1)--(v7) (v7)--(v2) (v2)--(v8) (v8)--(v6) (v6)--(v1);
+      % Shared edge highlighted
+      \draw[red, line width=3pt] (v1)--(v2);
+      \node[font=\tiny] at (0.25,0) {$e$};
+    \end{tikzpicture}
+  \end{center}
+  \noindent
+  No diagrama acima, ilustramos como dois $K_5$ são colados por uma única aresta $e$ (neste caso, a aresta $1$--$2$ pintada em vermelho de espessura maior representando a cor claro), com o novo $K_5$ à direita tendo seus ciclos de $C_5$ vermelho e azul orientados de forma compatível. Como $e$ é a única ligação compartilhada, nenhum triângulo preexistente tem sua distribuição afetada.
 
-\medskip\noindent\textbf{Passo indutivo --- Caso $Q_\ell$.}
-Um novo vértice $v$ é ligado a todos os vértices de um $K_4$ existente $\{a,b,c,d\}$,
-formando um novo $K_5$ sobre $\{a,b,c,d,v\}$.
-Pelo invariante, toda cópia de $K_5$ que contém o $K_4$ tem distribuição $2$-$1$ em seus
-triângulos; em particular, o $K_4$ possui um $P_3$ monocromático, digamos o caminho
-vermelho $a$--$b$--$c$--$d$.
-Definimos a coloração do novo $K_5$ estendendo esse $P_3$ ao $C_5$ vermelho
-$a\text{-}b\text{-}c\text{-}d\text{-}v\text{-}a$; as cinco arestas restantes formam
-o $C_5$ azul $a\text{-}c\text{-}v\text{-}b\text{-}d\text{-}a$.
-Todo vértice fica com grau $2$ em cada $C_5$, e o invariante é preservado.
+  \medskip\noindent\textbf{Passo indutivo --- Caso $T_\ell$.}
+  Dois novos vértices $u, v$ (com a aresta $uv$) são ligados a um triângulo $\{a,b,c\}$ preexistente, formando um novo $K_5$ sobre $\{a,b,c,u,v\}$.
+  Pelo invariante indutivo, o triângulo $\{a,b,c\}$ possui uma distribuição $2$-$1$ de cores sob a coloração auxiliar $\chi'$; logo, possui um $P_2$ monocromático. Sem perda de generalidade, assumimos que as arestas $ab$ e $bc$ são vermelhas (claro), definindo o caminho vermelho $a$--$b$--$c$.
+  Como o triângulo $\{a,b,c\}$ tem distribuição $2$-$1$, a terceira aresta $ac$ é necessariamente azul (escuro) sob $\chi'$.
+  Agora definimos a coloração das novas arestas incidentes a $u$ e $v$:
+  \begin{itemize}
+    \item Colorimos as novas arestas $cu, uv, va$ de vermelho (claro). Isto estende o $P_2$ vermelho preexistente $a$--$b$--$c$ a um $C_5$ vermelho $a\text{-}b\text{-}c\text{-}u\text{-}v\text{-}a$ completo.
+    \item Colorimos as novas arestas $cv, vb, bu, ua$ de azul (escuro). Juntamente com a aresta preexistente $ac$ (que, como demonstrado, já é azul), estas arestas formam um $C_5$ azul $a\text{-}c\text{-}v\text{-}b\text{-}u\text{-}a$ completo.
+  \end{itemize}
+  Desta forma, todas as novas arestas são coloridas de forma que o novo $K_5$ se decompõe em dois $C_5$ monocromáticos ($C_5^{\text{claro}}$ e $C_5^{\text{escuro}}$), com cada vértice tendo grau exatamente $2$ em cada cor, mantendo o invariante sem alterar a cor de nenhuma aresta preexistente.
+
+  \begin{center}
+    \begin{tikzpicture}[scale=1,
+        vx/.style={circle,draw,fill=white,minimum size=13pt,font=\tiny\strut},
+        ov/.style={circle,draw,fill=gray!25,minimum size=13pt,font=\tiny\strut}]
+      \node[ov] (A) at (0,1.8)    {$a$};
+      \node[ov] (B) at (1.7,0.6)  {$b$};
+      \node[ov] (C) at (1.0,-1.4) {$c$};
+      \node[vx] (U) at (-1.0,-1.4) {$u$};
+      \node[vx] (V) at (-1.7,0.6) {$v$};
+      % claro/vermelho: a-b-c-u-v-a
+      \draw[red, line width=1.8pt] (A)--(B)--(C)--(U)--(V)--(A);
+      % escuro/azul: a-c-v-b-u-a
+      \draw[blue, line width=1.8pt] (A)--(C) (C)--(V) (V)--(B) (B)--(U) (U)--(A);
+
+      \node[vx] (X) at (4.0,0.8)  {$x$};
+      \node[vx] (Y) at (4.0,-0.8) {$y$};
+      \draw[black, line width=1.5pt] (X)--(Y);
+      \draw[dashed,gray] (X) to[bend right=20](A) (X)--(B) (X)--(C);
+      \draw[dashed,gray] (Y) to[bend right=20](A) (Y) to[bend left=20] (B) (Y)--(C);
+    \end{tikzpicture}
+  \end{center}
+  \noindent
+  No diagrama acima, mostramos a expansão sobre triângulo $T_\ell$: os dois novos vértices $x, y$ (com a aresta preta sólida $xy$) são conectados por linhas tracejadas cinzas ao triângulo preexistente $\{a,b,c\}$ (sombreado em cinza claro) que serve como suporte para a expansão.
+
+  \medskip\noindent\textbf{Passo indutivo --- Caso $Q_\ell$.}
+  Um novo vértice $v$ é ligado a todos os vértices de um $K_4$ existente $\{a,b,c,d\}$, formando um novo $K_5$ sobre $\{a,b,c,d,v\}$.
+  Pelo invariante indutivo, as cópias de $K_5$ preexistentes em $B$ são decompostas em um $C_5$ vermelho (claro) e um $C_5$ azul (escuro). A restrição desta decomposição ao $K_4$ induzido $\{a,b,c,d\}$ implica que suas $6$ arestas contêm um caminho de comprimento $3$ em uma cor e as outras $3$ arestas formam um caminho de comprimento $3$ na outra cor.
+  Sem perda de generalidade, assumimos que as arestas $ab, bc, cd$ são vermelhas (claro), formando um $P_3$ vermelho $a$--$b$--$c$--$d$.
+  Consequentemente, as outras três arestas do $K_4$, que são $ac$, $bd$ e $da$, devem ser todas azuis (escuro) sob $\chi'$.
+  Definimos a coloração das novas arestas incidentes ao novo vértice $v$:
+  \begin{itemize}
+    \item Colorimos as novas arestas $dv$ e $va$ de vermelho (claro). Isto estende o $P_3$ vermelho $a$--$b$--$c$--$d$ ao $C_5$ vermelho completo $a\text{-}b\text{-}c\text{-}d\text{-}v\text{-}a$.
+    \item Colorimos as novas arestas $cv$ e $vb$ de azul (escuro). Juntamente com as arestas preexistentes $ac, bd, da$ (que já são todas azuis sob a coloração anterior), estas arestas completam o $C_5$ azul $a\text{-}c\text{-}v\text{-}b\text{-}d\text{-}a$.
+  \end{itemize}
+  Assim, cada vértice no novo $K_5$ fica com grau exatamente $2$ em cada cor, preservando o invariante sem alterar a coloração prévia de nenhuma aresta.
+
+  \begin{center}
+    \begin{tikzpicture}[scale=1,
+        vx/.style={circle,draw,fill=white,minimum size=13pt,font=\tiny\strut},
+        ov/.style={circle,draw,fill=gray!25,minimum size=13pt,font=\tiny\strut}]
+      \node[ov] (A) at (0,1.8)     {$a$};
+      \node[ov] (B) at (1.7,0.6)   {$b$};
+      \node[ov] (C) at (1.0,-1.4)  {$c$};
+      \node[vx] (U) at (-1.0,-1.4) {$u$};
+      \node[ov] (V) at (-1.7,0.6)  {$v$};
+      % claro/vermelho: a-b-c-u-v-a
+      \draw[red, line width=1.8pt] (A)--(B)--(C)--(U)--(V)--(A);
+      % escuro/azul: a-c-v-b-u-a
+      \draw[blue, line width=1.8pt] (A)--(C) (C)--(V) (V)--(B) (B)--(U) (U)--(A);
+
+      \node[vx] (X) at (4.2,0) {$x$};
+      \draw[dashed,gray] (X) to[bend right=20] (A) (X)--(B) (X)--(C) (X) to[bend left=20] (V);
+    \end{tikzpicture}
+  \end{center}
+  \noindent
+  No diagrama acima, ilustramos a expansão sobre $K_4$ do tipo $Q_\ell$: o novo vértice $x$ é conectado por linhas tracejadas cinzas a todos os vértices do $K_4$ preexistente $\{a,b,c,v\}$ (sombreados em cinza claro) que suporta a expansão.
 \end{proof}
 
 \begin{proof}[Prova da Afirmação~\ref{afirm:ulimit} (Limitação de $U_\ell$)]
-Dividimos a prova em dois casos, conforme o bloco $B$ contenha ou não uma cópia de $K_6$.
+  Dividimos a prova em dois casos, conforme o bloco $B$ contenha ou não uma cópia de $K_6$.
 
-\medskip
-\noindent\textit{Caso 2: O bloco $B$ contém uma cópia de $K_6$.}
+  \medskip
+  \noindent\textit{Caso 2: O bloco $B$ contém uma cópia de $K_6$.}
 
-\medskip
+  \medskip
 
-Como a $2$-densidade máxima do bloco satisfaz $\maxdens(B) < 3$, o bloco $B$ não pode conter nenhuma cópia de $K_7$ como subgrafo (uma vez que $m(K_7) = 21/7 = 3$). Assim, a maior cópia de clique completo que $B$ pode conter é $K_6$.
+  Como a $2$-densidade máxima do bloco satisfaz $\maxdens(B) < 3$, o bloco $B$ não pode conter nenhuma cópia de $K_7$ como subgrafo (uma vez que $m(K_7) = 21/7 = 3$). Assim, a maior cópia de clique completo que $B$ pode conter é $K_6$.
 
-Fixamos $H_0 \cong K_6$ como grafo inicial da construção indutiva de $B$. Como $B$ é um $K_5$-bloco e contém $K_6$, é possível iniciar a construção indutiva a partir deste subgrafo $K_6$ maximal e anexar os demais vértices por expansões sucessivas, seguindo a estrutura padrão descrita em~\cite{nenadov2017algorithmic} e \cite{AntiComplete}.
+  Fixamos $H_0 \cong K_6$ como grafo inicial da construção indutiva de $B$. Como $B$ é um $K_5$-bloco e contém $K_6$, é possível iniciar a construção indutiva a partir deste subgrafo $K_6$ maximal e anexar os demais vértices por expansões sucessivas, seguindo a estrutura padrão descrita em~\cite{nenadov2017algorithmic} e \cite{AntiComplete}.
 
-\medskip
-\noindent\textit{Penalidade inicial.}
-Calculamos diretamente a penalidade de $H_0 \cong K_6$:
-\[
-  p(K_6) \;=\; e(K_6) - 3\,v(K_6) + 5 \;=\; 15 - 3 \cdot 6 + 5 \;=\; 2.
-\]
-Como a densidade máxima do bloco satisfaz $\maxdens(B) < 3$, temos $e(B) \le 3\,v(B) - 1$, o que garante que $p(B) \le 4$. Logo, o orçamento total para passos degenerados a partir de $H_0$ é de no máximo $p(B) - p(K_6) \le 4 - 2 = 2$.
+  \medskip
+  \noindent\textit{Penalidade inicial.}
+  Calculamos diretamente a penalidade de $H_0 \cong K_6$:
+  \[
+    p(K_6) \;=\; e(K_6) - 3\,v(K_6) + 5 \;=\; 15 - 3 \cdot 6 + 5 \;=\; 2.
+  \]
+  Como a densidade máxima do bloco satisfaz $\maxdens(B) < 3$, temos $e(B) \le 3\,v(B) - 1$, o que garante que $p(B) \le 4$. Logo, o orçamento total para passos degenerados a partir de $H_0$ é de no máximo $p(B) - p(K_6) \le 4 - 2 = 2$.
 
-\medskip
-\noindent\textit{Coloração auxiliar de $K_6$.}
-Rotulamos os vértices de $K_6$ como $1, 2, 3, 4, 5, 6$ e definimos $\chi'$ por:
-\begin{itemize}
-  \item $C_6$ vermelho: $1\text{-}2\text{-}3\text{-}4\text{-}5\text{-}6\text{-}1$
-        (as $6$ arestas do ciclo externo);
-  \item $C_6$ azul: $1\text{-}3\text{-}5\text{-}1$ e $2\text{-}4\text{-}6\text{-}2$
-        reunidos, ou seja, as $6$ arestas $13, 35, 15, 24, 46, 26$
-        (o ciclo ``saltando de dois em dois'');
-  \item $M_3$ azul: o emparelhamento perfeito $\{14, 25, 36\}$.
-\end{itemize}
-Tem-se $6 + 6 + 3 = 15 = \binom{6}{2}$ arestas, cobrindo exatamente $E(K_6)$.
+  \medskip
+  \noindent\textit{Coloração auxiliar de $K_6$.}
+  Rotulamos os vértices de $K_6$ como $1, 2, 3, 4, 5, 6$ e definimos $\chi'$ por:
+  \begin{itemize}
+    \item $C_6$ vermelho: $1\text{-}2\text{-}3\text{-}4\text{-}5\text{-}6\text{-}1$
+          (as $6$ arestas do ciclo externo);
+    \item $C_6$ azul: $1\text{-}3\text{-}5\text{-}1$ e $2\text{-}4\text{-}6\text{-}2$
+          reunidos, ou seja, as $6$ arestas $13, 35, 15, 24, 46, 26$
+          (o ciclo ``saltando de dois em dois'');
+    \item $M_3$ azul: o emparelhamento perfeito $\{14, 25, 36\}$.
+  \end{itemize}
+  Tem-se $6 + 6 + 3 = 15 = \binom{6}{2}$ arestas, cobrindo exatamente $E(K_6)$.
 
-\medskip
+  \medskip
 
-\begin{center}
-\begin{tikzpicture}[scale=1.2,
-  vm/.style={draw=red!70!black, very thick},
-  az/.style={draw=blue!70!black, very thick, dashed},
-  vert/.style={circle, fill=black, inner sep=1.8pt}]
+  \begin{center}
+    \begin{tikzpicture}[scale=1.2,
+        vm/.style={draw=red!70!black, very thick},
+        az/.style={draw=blue!70!black, very thick, dashed},
+        vert/.style={circle, fill=black, inner sep=1.8pt}]
 
-  \foreach \i/\ang in {1/90, 2/30, 3/330, 4/270, 5/210, 6/150}
-    \node[vert] (v\i) at (\ang:1.2cm) {};
-  \foreach \i/\ang in {1/90, 2/30, 3/330, 4/270, 5/210, 6/150}
-    \node at (\ang:1.55cm) {$\i$};
+      \foreach \i/\ang in {1/90, 2/30, 3/330, 4/270, 5/210, 6/150}
+      \node[vert] (v\i) at (\ang:1.2cm) {};
+      \foreach \i/\ang in {1/90, 2/30, 3/330, 4/270, 5/210, 6/150}
+      \node at (\ang:1.55cm) {$\i$};
 
-  % C6 vermelho (ciclo externo)
-  \foreach \a/\b in {1/2, 2/3, 3/4, 4/5, 5/6, 6/1}
-    \draw[vm] (v\a) -- (v\b);
-  % M3 vermelho (diâmetros)
-  \foreach \a/\b in {1/4, 2/5, 3/6}
-    \draw[az] (v\a) -- (v\b);
-  % C6 azul (saltos de 2)
-  \foreach \a/\b in {1/3, 3/5, 5/1, 2/4, 4/6, 6/2}
-    \draw[az] (v\a) -- (v\b);
-\end{tikzpicture}
-\end{center}
+      % C6 vermelho (ciclo externo)
+      \foreach \a/\b in {1/2, 2/3, 3/4, 4/5, 5/6, 6/1}
+      \draw[vm] (v\a) -- (v\b);
+      % M3 vermelho (diâmetros)
+      \foreach \a/\b in {1/4, 2/5, 3/6}
+      \draw[az] (v\a) -- (v\b);
+      % C6 azul (saltos de 2)
+      \foreach \a/\b in {1/3, 3/5, 5/1, 2/4, 4/6, 6/2}
+      \draw[az] (v\a) -- (v\b);
+    \end{tikzpicture}
+  \end{center}
 
-\medskip
-\noindent\textit{Verificação das propriedades invariantes.}
+  \medskip
+  \noindent\textit{Verificação das propriedades invariantes.}
 
-A coloração acima satisfaz o invariante estabelecido na prova da
-Afirmação~\ref{afirm:vertex-exp}:
+  A coloração acima satisfaz o invariante estabelecido na prova da
+  Afirmação~\ref{afirm:vertex-exp}:
 
-\begin{itemize}
-  \item Todo vértice de $K_6$ tem grau $2$ no $C_6$ vermelho, grau $2$ no $C_6$ azul
-        e grau $1$ no $M_3$ vermelho, portanto grau total $3$ em arestas vermelhas e
-        grau $2$ em arestas azuis.
+  \begin{itemize}
+    \item Todo vértice de $K_6$ tem grau $2$ no $C_6$ vermelho, grau $2$ no $C_6$ azul
+          e grau $1$ no $M_3$ vermelho, portanto grau total $3$ em arestas vermelhas e
+          grau $2$ em arestas azuis.
 
-  \item Qualquer cópia de $K_5$ em $K_6$ é obtida removendo um vértice $w$.
-        Dentro desse $K_5$, cada vértice perde exatamente $1$ vizinho (o próprio $w$),
-        mas mantém ao menos $1$ vizinho vermelho e $1$ vizinho azul, preservando o
-        equilíbrio da Proposição~\ref{prop:equilibrio}.
+    \item Qualquer cópia de $K_5$ em $K_6$ é obtida removendo um vértice $w$.
+          Dentro desse $K_5$, cada vértice perde exatamente $1$ vizinho (o próprio $w$),
+          mas mantém ao menos $1$ vizinho vermelho e $1$ vizinho azul, preservando o
+          equilíbrio da Proposição~\ref{prop:equilibrio}.
 
-  \item Todo triângulo de $K_6$ possui exatamente $2$ arestas vermelhas e $1$ azul,
-        ou $1$ vermelha e $2$ azuis (pode-se verificar por inspeção direta nos
-        $\binom{6}{3} = 20$ triângulos). Em particular, a distribuição $2$-$1$ vale,
-        garantindo a aplicabilidade da Afirmação~\ref{afirm:vertex-exp}.
-\end{itemize}
+    \item Todo triângulo de $K_6$ possui exatamente $2$ arestas vermelhas e $1$ azul,
+          ou $1$ vermelha e $2$ azuis (pode-se verificar por inspeção direta nos
+          $\binom{6}{3} = 20$ triângulos). Em particular, a distribuição $2$-$1$ vale,
+          garantindo a aplicabilidade da Afirmação~\ref{afirm:vertex-exp}.
+  \end{itemize}
 
-\medskip
-\noindent\textit{Como podem surgir passos $U_\ell$ a partir de $K_6$.}
+  \medskip
+  \noindent\textit{Como podem surgir passos $U_\ell$ a partir de $K_6$.}
 
-Um passo $U_\ell$ requer a presença de um $K_5^-$ no grafo atual, isto é, cinco
-vértices faltando exatamente uma aresta para formar $K_5$.
-No entanto, dentro de $K_6$ puro, qualquer conjunto de $5$ vértices induz um $K_5$
-completo; logo \emph{não existe} $K_5^-$ dentro de $H_0 = K_6$.
+  Um passo $U_\ell$ requer a presença de um $K_5^-$ no grafo atual, isto é, cinco
+  vértices faltando exatamente uma aresta para formar $K_5$.
+  No entanto, dentro de $K_6$ puro, qualquer conjunto de $5$ vértices induz um $K_5$
+  completo; logo \emph{não existe} $K_5^-$ dentro de $H_0 = K_6$.
 
-Portanto, um passo $U_\ell$ nunca pode ser o primeiro passo após $H_0$: é
-necessário realizar ao menos um passo de expansão degenerado do tipo $T_\ell$ ou
-$Q_\ell$ antes, de modo a introduzir novos vértices e criar estruturas contendo um $K_5^-$.
+  Portanto, um passo $U_\ell$ nunca pode ser o primeiro passo após $H_0$: é
+  necessário realizar ao menos um passo de expansão degenerado do tipo $T_\ell$ ou
+  $Q_\ell$ antes, de modo a introduzir novos vértices e criar estruturas contendo um $K_5^-$.
 
-Cada um desses passos degenerados ($T_\ell$ ou $Q_\ell$) consome exatamente $1$
-unidade do orçamento de penalidade. Como o orçamento total disponível a partir de
-$K_6$ é de no máximo $2$ (devido à densidade estrita $\maxdens(B) < 3$), esse primeiro
-passo reduz o orçamento restante para no máximo $2 - 1 = 1$.
+  Cada um desses passos de  \medskip
+  \noindent\textit{Caso 1: O bloco $B$ não contém nenhuma cópia de $K_6$.}
 
-Visto que cada passo $U_\ell$ consome exatamente $1$ unidade de penalidade ($\Delta p = 1$),
-o orçamento restante de no máximo $1$ permite realizar \emph{no máximo um} passo
-$U_\ell$ em toda a construção. Portanto, o número total de passos $U_\ell$ quando
-$H_0 \cong K_6$ é no máximo $1$, o que satisfaz o limite de no máximo $2$ exigido
-pela Afirmação~\ref{afirm:ulimit}, concluindo o Caso~2.
+  \medskip
 
-\medskip
-\noindent\textit{Caso 1: O bloco $B$ não contém nenhuma cópia de $K_6$.}
+  Iniciamos a construção a partir de uma única cópia base $H_0 \cong K_5$, com
+  $p(H_0) = 0$. O orçamento total para passos degenerados é $p(B) \le 4$.
+  Seja $k$ o número de passos $Q_\ell$ aplicados diretamente sobre $H_0$ (ou seja,
+  o número de vértices acoplados a $H_0$ via $Q_\ell$). Cada passo $Q_\ell$ consome $1$ unidade
+  de orçamento. Analisamos todos os cenários para $k \ge 0$.
 
-\medskip
+  \medskip
+  \noindent\textbf{Subcaso 1a: $k \ge 2$.}
+  Se $k \ge 2$ passos $Q_\ell$ são realizados diretamente sobre $H_0$, o orçamento de penalidade
+  consumido é de pelo menos $2$. Como o orçamento total é de no máximo $4$, o orçamento
+  restante para todo o resto da construção (incluindo todos os passos $U_\ell$) é de no máximo
+  $4 - 2 = 2$. Visto que cada passo $U_\ell$ consome exatamente $1$ unidade de penalidade,
+  o número total de passos $U_\ell$ é trivialmente limitado por $2$.
 
-Iniciamos a construção a partir de uma única cópia base $H_0 \cong K_5$, com
-$p(H_0) = 0$. O orçamento total para passos degenerados é $p(B) \le 4$.
+  \medskip
+  \noindent\textbf{Subcaso 1b: $k = 1$.}
+  Suponha que realizamos exatamente um único passo $Q_\ell$ sobre $H_0$. Este passo adiciona
+  um vértice $u$ conectado a um $K_4 = \{a,b,c,d\} \subset H_0$, consumindo $1$ unidade de orçamento.
+  O vértice restante de $H_0$ é denotado por $v$.
 
-\medskip
-\noindent\textit{Análise dos vértices acoplados via $Q_\ell$ a $H_0$.}
+  Neste ponto, o orçamento restante é $3$. No entanto, mostramos que um passo $U_\ell$ é
+  \emph{impossível} imediatamente após este $Q_\ell$: a única não-aresta cuja adição poderia
+  fechar um $K_5^-$ é $\{u,v\}$, mas adicioná-la completaria um $K_6$ sobre o conjunto
+  de vértices $\{u,v,a,b,c,d\}$ (pois $u$ e $v$ são ambos conectados a todo o $K_4 = \{a,b,c,d\}$).
+  Como $B$ não contém $K_6$, nenhum passo $U_\ell$ pode ser o próximo passo da construção.
 
-Na construção do bloco, a partir de $H_0$, podemos ter vértices adicionados diretamente sobre $H_0$ através de passos $Q_\ell$. Cada passo $Q_\ell$ adiciona um novo vértice conectado a um $K_4 \subset H_0$, consumindo $1$ unidade do orçamento de penalidade. Como o orçamento total é $4$, podemos ter até $4$ vértices acoplados dessa forma a $H_0$.
+  Desta forma, deve-se realizar pelo menos mais um passo de expansão antes do primeiro $U_\ell$.
+  Como expansões regulares do tipo $R_\ell$ não criam novos $K_5^-$ (pois compartilham apenas uma
+  aresta, o que é insuficiente para formar o acoplamento de $K_3$ exigido por um $K_5^-$), este passo
+  deve ser degenerado:
+  \begin{itemize}
+    \item Se for outro passo $Q_\ell$, caímos no cenário $k \ge 2$, onde o orçamento restante é $\le 2$.
+    \item Se for um passo $T_\ell$, este consome $1$ unidade de orçamento. O orçamento restante para o
+          resto da construção cai para no máximo $3 - 1 = 2$, limitando o número de passos $U_\ell$ a no máximo $2$.
+  \end{itemize}
+  Portanto, em todos os caminhos de construção com $k = 1$, o número de passos $U_\ell$ é no máximo $2$.
 
-Seja $k$ o número de vértices acoplados a $H_0$ via passos $Q_\ell$. O orçamento consumido por esses passos iniciais é $k$, restando $4 - k$ de orçamento disponível para o resto da construção (incluindo passos $U_\ell$). Analisamos os casos em que $k \in \{2, 3, 4\}$:
+  \medskip
+  \noindent\textbf{Subcaso 1c: $k = 0$.}
+  Neste caso, nenhum passo $Q_\ell$ é realizado diretamente sobre $H_0$. O orçamento total disponível é $4$.
+  Para que qualquer passo $U_\ell$ seja possível, o grafo deve conter pelo menos uma estrutura $K_5^-$,
+  o que exige que duas cópias de $K_5$ compartilhem pelo menos um triângulo.
+  Como inicialmente temos apenas $H_0 \cong K_5$, devemos realizar pelo menos um passo de expansão
+  degenerado do tipo $T_\ell$ para criar tal estrutura:
+  \begin{itemize}
+    \item Se realizamos dois ou mais passos $T_\ell$, o orçamento consumido por essas expansões é
+          de pelo menos $2$. O orçamento restante para os passos $U_\ell$ é então no máximo $4 - 2 = 2$.
+    \item Se realizamos exatamente um único passo $T_\ell$ (consumindo $1$ unidade de orçamento, com
+          orçamento restante igual a $3$), analisamos a estrutura geométrica resultante.
+  \end{itemize}
+  Suponha, portanto, que realizamos exatamente um único passo $T_\ell$ sobre um triângulo
+  $\Delta = \{a,b,c\} \subset H_0$, adicionando os vértices $x, y$ (com a aresta $xy$) conectados a $\Delta$.
+  O conjunto de vértices de $H_0 \setminus \Delta$ é denotado por $A = \{u,v\}$, e os novos vértices
+  são denotados por $Z = \{x,y\}$.
 
-\begin{itemize}
-    \item \textbf{$k = 4$ vértices acoplados:} O orçamento consumido é $4$. Resta $0$ de orçamento. Portanto, o número de passos $U_\ell$ possíveis na construção é \textbf{$0$}.
-    \item \textbf{$k = 3$ vértices acoplados:} O orçamento consumido é $3$. Resta apenas $1$ unidade de orçamento. Portanto, podemos ter no máximo \textbf{$1$} passo $U_\ell$ na construção.
-    \item \textbf{$k = 2$ vértices acoplados:} O orçamento consumido é $2$. Restam $2$ unidades de orçamento. Como cada passo $U_\ell$ consome $1$, podemos ter no máximo \textbf{$2$} passos $U_\ell$.
-\end{itemize}
+  As únicas não-arestas do grafo cujas adições podem fechar um $K_5^-$ sem criar imediatamente um $K_6$
+  são os pares $\{w,z\}$ com $w \in A$ e $z \in Z$, cuja vizinhança comum contém o triângulo $\{a,b,c\}$.
+  Essas não-arestas formam exatamente as arestas do grafo bipartido completo $A \times Z \cong K_{2,2}$.
 
-Em todos esses casos ($k \in \{2, 3, 4\}$), é trivialmente óbvio que o número de passos $U_\ell$ é no máximo $2$, satisfazendo a Afirmação~\ref{afirm:ulimit}. O único cenário em que o orçamento restante permitiria, teoricamente, $3$ passos $U_\ell$ ocorre quando temos apenas \textbf{$1$ vértice acoplado} a $H_0$ via $Q_\ell$ (isto é, $k = 1$). Faremos uma análise detalhada deste caso.
+  Teoricamente, o orçamento restante de $3$ permitiria realizar $3$ passos $U_\ell$ adicionando $3$ arestas
+  deste $K_{2,2}$. No entanto, mostramos que a adição de qualquer par de arestas que compartilhe um vértice
+  cria obrigatoriamente um $K_6$:
+  \begin{enumerate}
+    \item \emph{Compartilhamento em $Z$:} Suponha que adicionamos as arestas $xu$ e $xv$ (compartilhando $x \in Z$).
+          Então, os seis vértices $\{a,b,c,x,u,v\}$ formam um $K_6$, pois $\{a,b,c\}$ é um triângulo,
+          $u$ e $v$ pertencem a $H_0 \cong K_5$ (logo $uv$ é aresta e ambos se ligam a $\{a,b,c\}$),
+          $x$ se liga a $\{a,b,c\}$ via $T_\ell$, e adicionamos as arestas $xu$ e $xv$. $\bot$
+    \item \emph{Compartilhamento em $A$:} Suponha que adicionamos as arestas $xu$ e $yu$ (compartilhando $u \in A$).
+          Então, os seis vértices $\{a,b,c,u,x,y\}$ formam um $K_6$, pois $\{a,b,c\}$ é um triângulo,
+          $u$ se liga a $\{a,b,c\}$, $x$ e $y$ se ligam a $\{a,b,c\}$, $xy$ é a aresta de $T_\ell$,
+          e adicionamos as arestas $xu$ e $yu$. $\bot$
+  \end{enumerate}
+  Portanto, para evitar a criação de um $K_6$, as arestas adicionadas pelos passos $U_\ell$ devem
+  formar um acoplamento (matching) no grafo bipartido $A \times Z$. Como $|A| = 2$ e $|Z| = 2$,
+  o tamanho máximo de um acoplamento em $K_{2,2}$ é exatamente $2$.
 
-\medskip
-\noindent\textit{Passo $U_\ell$ imediatamente após um único $Q_\ell$ é impossível sem $K_6$.}
+  Assim, mesmo com orçamento restante igual a $3$, o número máximo de passos $U_\ell$ realizáveis
+  sem criar $K_6$ é no máximo $2$.
 
-Suponha que, a partir de $H_0$, realizamos um único passo $Q_\ell$: adicionamos um vértice $u$
-ligado a todos os vértices de um $K_4 = \{a,b,c,d\} \subset K_5$, formando um segundo
-$K_5 = \{u,a,b,c,d\}$. Neste ponto $N(v) \cap N(u) = \{a,b,c,d\}$, onde $v$ é o vértice
-original do primeiro $K_5$ fora de $K_4$. A vizinhança comum $\{a,b,c,d\}$ contém
-um $K_4$, de modo que a aresta $vu$ completaria um $K_6$ sobre $\{v,u,a,b,c,d\}$. Como
-$B$ não contém $K_6$, nenhum passo $U_\ell$ é possível imediatamente após $Q_\ell$.
-É portanto necessário intercalar ao menos um passo $T_\ell$ antes do primeiro $U_\ell$.
-
-\medskip
-\noindent\textit{Configuração $H_1$ após $T_\ell$.}
-
-Seja $H_0$ o grafo com dois $K_5$ compartilhando $K(v) = \{a,b,c,d\}$, obtido por um
-passo $Q_\ell$ a partir do $K_5$ inicial (com $p(H_0) = 1$). Como $B$ não contém $K_6$,
-realizamos um passo $T_\ell$: adicionamos dois vértices $x, y$ (com a aresta $xy$) ligados
-a um triângulo $\Delta \subset B$. Consideramos dois subcasos conforme a posição de
-$\Delta$ em relação a $K(v)$.
-
-\medskip
-\noindent\textbf{Subcaso 1a: $\Delta \subset K(v)$.}
-Tomamos $\Delta = \{a,b,c\} \subset K(v)$. Após $T_\ell$, o grafo $H_1$ tem:
-\[
-    v(H_1) = 8,\quad e(H_1) = 21,\quad p(H_1) = 2.
-\]
-As únicas não-arestas de $H_1$ relevantes para $U_\ell$ são da forma $\{w, z\}$
-com $w \in \{v, u\}$ e $z \in \{x, y\}$, ou $\{x,d\}$ e $\{y,d\}$: em todos os
-casos, $N(w) \cap N(z) = \{a,b,c\}$, que contém um triângulo mas não um $K_4$
-(pois $d$ não está ligado a $x$ nem a $y$), garantindo a ausência de $K_6$ ao
-adicionar a aresta.
-
-\medskip
-\noindent\textbf{Subcaso 1b: $\Delta \not\subset K(v)$.}
-O triângulo $\Delta$ contém pelo menos um vértice de $\{v,u\}$; tomamos sem perda
-de generalidade $\Delta = \{v,a,b\}$. Após $T_\ell$:
-\[
-    v(H_1) = 8,\quad e(H_1) = 21,\quad p(H_1) = 2.
-\]
-As não-arestas relevantes para $U_\ell$ são $\{x,c\}$, $\{x,d\}$, $\{y,c\}$, $\{y,d\}$,
-com $N(x) \cap N(z) = \{v,a,b\}$ para $z \in \{c,d\}$; as não-arestas $\{u,x\}$ e $\{u,y\}$
-satisfazem $N(u) \cap N(x) = \{a,b\}$, que não contém triângulo, e portanto não dão
-origem a $K_5^-$ nem a passos $U_\ell$.
-
-\medskip
-Em ambos os subcasos, a estrutura das não-arestas de $H_1$ tem a seguinte forma:
-existe um triângulo base $\Delta = \{a,b,c\}$ e dois conjuntos de vértices
-$A = \{v, u\}$ e $Z = \{x, y\}$ (no Subcaso~1a) ou $A = \{c,d\}$ e $Z = \{x,y\}$
-(no Subcaso~1b), tais que:
-\begin{itemize}
-  \item todo $K_5^-$ disponível em $H_1$ tem a forma $\{w,z,a,b,c\}$ com
-        $w \in A$, $z \in Z$ e aresta faltante $\{w,z\}$;
-  \item $N(w) \cap N(z) = \{a,b,c\}$ para todo par $(w,z) \in A \times Z$.
-\end{itemize}
-
-\medskip
-\noindent\textit{Ao mais dois passos $U_\ell$ sem criar $K_6$.}
-
-Após $H_1$, os possíveis passos $U_\ell$ correspondem à adição de uma aresta
-$\{w,z\} \in A \times Z = \{w_1,w_2\} \times \{z_1,z_2\}$. Analisamos quantos
-desses passos são realizáveis sem criar $K_6$.
-
-\medskip
-Após o \textbf{primeiro passo} $U_\ell$, digamos a adição de $\{w_1, z_1\}$:
-\begin{itemize}
-  \item $N(w_1) \cap N(z_2) = \{a,b,c\}$: sem $K_4$, logo o segundo passo
-        $\{w_1,z_2\}$ criaria $K_5$ sem $K_6$. \checkmark
-  \item Analogamente para $\{w_2,z_1\}$.
-  \item Para $\{w_2,z_2\}$: $N(w_2) \cap N(z_2)$ ainda não contém $w_1$ nem $z_1$
-        (pois a aresta $w_2 z_2$ não impõe ligação com $w_1$ ou $z_1$),
-        logo esse passo também não cria $K_6$. \checkmark
-\end{itemize}
-Portanto o \textbf{segundo passo} $U_\ell$ é sempre possível sem $K_6$.
-
-\medskip
-Após \textbf{dois passos} $U_\ell$, suponha que foram adicionadas as arestas
-$\{w_i, z_j\}$ e $\{w_k, z_\ell\}$. Consideramos os dois casos:
-
-\begin{enumerate}
-  \item \emph{Par adjacente} (compartilhando um vértice de $A$ ou $Z$):
-    os seis vértices $\{a,b,c,w_i,z_j,z_\ell\}$ (ou $\{a,b,c,w_i,w_k,z_j\}$)
-    têm agora todas as arestas presentes, formando $K_6$. Logo este caso já violou
-    a condição de ausência de $K_6$ ao ser executado. Assim, somente pares
-    \emph{não-adjacentes} (disjuntos em $A$ e $Z$) são realizáveis: $\{w_1,z_1\}$
-    e $\{w_2,z_2\}$, ou $\{w_1,z_2\}$ e $\{w_2,z_1\}$.
-
-  \item \emph{Par não-adjacente}: após adicionar $\{w_1,z_1\}$ e $\{w_2,z_2\}$, as
-    duas arestas restantes em $A \times Z$ são $\{w_1,z_2\}$ e $\{w_2,z_1\}$.
-    \begin{itemize}
-      \item Adicionar $\{w_1,z_2\}$: os seis vértices $\{a,b,c,w_1,z_1,z_2\}$ têm
-        as arestas $w_1 z_1$ (adicionada), $w_1 z_2$ (sendo adicionada),
-        $z_1 z_2$ (aresta $xy$ de $T_\ell$), e todas as arestas de
-        $\Delta \cup \{w_1\} \cup \{z_1,z_2\}$ via as ligações ao triângulo.
-        Verifica-se que esse conjunto forma $K_6$. $\bot$
-      \item Analogamente para $\{w_2,z_1\}$. $\bot$
-    \end{itemize}
-\end{enumerate}
-Portanto, \textbf{qualquer terceiro passo $U_\ell$ cria $K_6$}, o que é proibido
-em Caso~1. Logo o número de passos $U_\ell$ neste caso é no máximo $\mathbf{2}$.
-
-\medskip
-\noindent\textit{Conclusão do Caso 1.}
-
-Em qualquer construção de $K_5$-bloco $B$ sem $K_6$ e com $\maxdens(B) < 3$,
-o primeiro passo $U_\ell$ é precedido por ao menos um passo $T_\ell$ (e,
-possivelmente, por um passo $Q_\ell$ anterior), consumindo ao menos $1$ unidade
-de orçamento antes do primeiro $U_\ell$. Além disso, a análise geométrica
-da estrutura bipartida $A \times Z$ sobre o triângulo base $\Delta$ mostra
-que qualquer terceiro passo $U_\ell$ cria obrigatoriamente um $K_6$. Portanto,
-o número total de passos $U_\ell$ quando $B$ não contém $K_6$ é no máximo
-$\mathbf{2}$, concluindo o Caso~1 e, juntamente com o Caso~2, a prova completa
-da Afirmação~\ref{afirm:ulimit}. 
-\medskip
-
-\emph{[A completar.]}
+  \medskip
+  \noindent\textit{Conclusão do Caso 1.}
+  Reunindo os três subcasos, mostramos que se o bloco $B$ não contém $K_6$,
+  qualquer caminho de construção indutiva limita o número total de passos $U_\ell$ a no máximo $\mathbf{2}$,
+  o que conclui a prova da Afirmação~\ref{afirm:ulimit}.
 \end{proof}
 
 
