@@ -418,19 +418,19 @@ O Teorema~\ref{thm:behague-1-stmt} generaliza o Teorema~\ref{thm:1statement}.
   Sejam $k \ge 3$ e $H$ um grafo que não é floresta.
   \begin{enumerate}
     \item[(a)] Se $k \ge 4$, \emph{ou} $\mdens(H) \ne 2$, \emph{ou}
-      $\mdens(H) = 2$ e $H$ contém um subgrafo estritamente $2$-balanceado
-      $J \ne K_3$ com $\mdens(J) = 2$,
-      então existem $c, C > 0$ tais que
-      \[
-        \lim_{n\to\infty} \Pr\!\bigl[\Gnp \cram (K_{1,k}, H)\bigr] =
-        \begin{cases}
-          0 & \text{se } p \le c\, n^{-1/\mdens(H)}, \\
-          1 & \text{se } p \ge C\, n^{-1/\mdens(H)}.
-        \end{cases}
-      \]
+          $\mdens(H) = 2$ e $H$ contém um subgrafo estritamente $2$-balanceado
+          $J \ne K_3$ com $\mdens(J) = 2$,
+          então existem $c, C > 0$ tais que
+          \[
+            \lim_{n\to\infty} \Pr\!\bigl[\Gnp \cram (K_{1,k}, H)\bigr] =
+            \begin{cases}
+              0 & \text{se } p \le c\, n^{-1/\mdens(H)}, \\
+              1 & \text{se } p \ge C\, n^{-1/\mdens(H)}.
+            \end{cases}
+          \]
     \item[(b)] Se $k = 3$ e $\mdens(H) = 2$ e o único subgrafo estritamente
-      $2$-balanceado de $H$ com $2$-densidade~$2$ é $K_3$ (e.g.\ $H = K_3$),
-      então o limiar é mais fraco: coarse threshold em $n^{-1/2}$.
+          $2$-balanceado de $H$ com $2$-densidade~$2$ é $K_3$ (e.g.\ $H = K_3$),
+          então o limiar é mais fraco: coarse threshold em $n^{-1/2}$.
   \end{enumerate}
 \end{theorem}
 
@@ -462,9 +462,8 @@ A teoria canônica de Ramsey estuda estruturas que emergem em colorações
   Dado um grafo ordenado $G$ (com uma ordenação total fixada nos vértices) e um grafo $H$,
   dizemos que $G$ satisfaz a \textbf{propriedade Ramsey canônica para $H$},
   e escrevemos $G \xrightarrow{\mathrm{can}} H$, se toda coloração arbitrária das arestas de $G$
-  contém uma cópia canônica de $H$ (isto é, monocromática, arco-íris, ou lexicográfica min-lex).
+  contém uma cópia canônica de $H$ (isto é, monocromática, arco-íris, min-lex, ou max-lex).
 \end{definition}
-\noindent\hugo{definir a propriedade ramsey canônica}
 
 \begin{theorem}[Erdős--Rado \cite{erdos1950combinatorial}]
   Para qualquer inteiro $\ell \ge 1$, existe $N = N(\ell)$ tal que toda coloração
@@ -494,11 +493,10 @@ O resultado de Erdős--Rado foi trazido para o contexto aleatório por Kamčev e
   \begin{itemize}
     \item uma cópia \textbf{monocromática} de $H_1$, ou
     \item uma cópia \textbf{arco-íris} de $H_2$, ou
-    \item uma cópia \textbf{lexicográfica min-lex} de $H_3$.
+    \item uma cópia \textbf{lexicográfica min-lex} de $H_3$. \hugo{(sem max-lex?)}
   \end{itemize}
   (Adotamos ao longo deste trabalho a convenção de que por ``cópia lexicográfica'' entendemos sempre a cópia min-lex.)
 \end{definition}
-\hugo{escolher qual definição de canônico usar. Todas as cópias lexicográficas de $H_3$, ou só uma cópia min-lex ou max-lex? Dizer que $G$ é ordenado.}
 
 \begin{question}
   \label{q:assimetrico}
@@ -518,7 +516,6 @@ Por outro lado, para $p \gg n^{-1/\mdens(K_5)} = n^{-1/3}$, a existência de um 
 
 O resultado principal que buscamos formalizar é o seguinte:
 
-\hugo{enunciar o teorema entes das definições estruturais.}
 \begin{theorem}
   \label{thm:main-can}
   Existe um limiar semi-agudo para a propriedade $\Gnp \xrightarrow{\mathrm{can}} (K_3,K_4,K_5)$ em $\hat{p}(n) = n^{-1/3}$. Ou seja, existem constantes $c, C > 0$ tais que:
@@ -583,8 +580,8 @@ Apresentamos a demonstração completa do Teorema~\ref{thm:main-can} com base ne
       \State Remover vértices isolados de $\hat{G}$
       \State $\{B_1, \ldots, B_k\} \leftarrow K_5\text{-blocos}$ obtidos de $\hat{G}$
       \For{cada bloco $B_j$}
-        \State colorir $B_j$ sem $K_5$ lexicográfico, $K_3$ monocromático e $K_4$ arco-íris,
-        \Statex \hspace{2.85em} usando conjunto de cores distinto dos demais blocos
+      \State colorir $B_j$ sem $K_5$ lexicográfico, $K_3$ monocromático e $K_4$ arco-íris,
+      \Statex \hspace{2.85em} usando conjunto de cores distinto dos demais blocos
       \EndFor
     \end{algorithmic}
   \end{algorithm}
@@ -617,12 +614,46 @@ Seguindo as estratégias de Nenadov et al.~\cite{nenadov2017algorithmic} e~\cite
   \item \textbf{$Q_\ell$ (Expansão sobre $K_4$):} Adiciona-se $1$ novo vértice ligado a um $K_4$ existente através de $4$ novas arestas, completando um $K_5$. O incremento é $\Delta p = 4 - 3(1) = 1$.
   \item \textbf{$U_\ell$ (União sobre $K_5^-$):} Não se adicionam vértices; apenas $1$ nova aresta é inserida conectando dois vértices de um $K_5$ quase completo ($K_5 \setminus \{e\}$) já presente na estrutura. A variação é $\Delta p = 1 - 3(0) = 1$.
 \end{itemize}
+\hugo{O que é o $\ell$ em $R_\ell, T_\ell, Q_\ell, U_\ell$?}
 
 \begin{remark}
   \textbf{Compatibilidade com a definição de Bloco:} Como toda cópia de $K_5$ em um $K_5$-bloco $B$ deve ser $K_5$-fechada (ou seja, ter pelo menos $3$ arestas $K_5$-fechadas que pertencem a outras cópias de $K_5$ no bloco), a expansão regular $R_\ell$ (que compartilha apenas uma única aresta com a estrutura existente) não pode ocorrer isoladamente na construção interna de um $K_5$-bloco $B$ fechado. Ela é utilizada apenas para conectar blocos diferentes ou partes florestais em árvore do grafo global $G$. Portanto, a construção indutiva de um $K_5$-bloco $B$ consiste exclusivamente de passos degenerados $T_\ell$, $Q_\ell$ e $U_\ell$.
 \end{remark}
 
 As expansões degeneradas ($T_\ell$, $Q_\ell$ e $U_\ell$) aumentam a penalidade estritamente em $1$. Como iniciamos com $p(H_0) = 0$ e $p(B) \le 4$, concluímos que o número total destas expansões na construção do bloco $B$ é de no máximo $4$.
+
+\hugo{Se considerarmos que um $K_5$-bloco é definido como o conjunto de todas as arestas que pertencem a algum $K_5$ do grafo (ou uma componente conexa disso, em que cada $K_5$ compartilha pelo menos uma aresta com outro $K_5$), então precisamos considerar todas as expansões possíveis:}
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{|c|c|l|c|c|}
+    \hline
+    Vértices antigos & Arestas antigas & Estrutura Compartilhada & Arestas Novas & $\Delta p$ \\
+    \hline
+    2 & 1 & Aresta ($U_\ell$) & 9 & 0 \\
+    3 & 3 & $K_3$ ($T_\ell$) & 7 & 1 \\
+    3 & 2 & $P_2$ & 8 & 2 \\
+    3 & 1 & Aresta + Vértice solto & 9 & 3 \\
+    4 & 6 & $K_4$ ($Q_\ell$) & 4 & 1 \\
+    4 & 5 & $K_4^-$ & 5 & 2 \\
+    4 & 4 & $C_4$ ou $K_3 + e$ & 6 & 3 \\
+    4 & 3 & $P_3$ ou $K_3 + v$ & 7 & 4 \\
+    5 & 9 & $K_5^-$ ($U_\ell$) & 1 & 1 \\
+    5 & 8 & $K_5$ menos 2 arestas & 2 & 2 \\
+    5 & 7 & $K_5$ menos 3 arestas & 3 & 3 \\
+    5 & 6 & $K_5$ menos 4 arestas & 4 & 4 \\
+    \hline
+  \end{tabular}
+  \caption{Tipos de expansão possíveis sob a nova definição de $K_5$-bloco, limitadas a $\Delta p \leq 4$.}
+  \label{tab:novas-expansoes}
+\end{table}
+
+Em vez de listar e analisar separadamente todos os 12 casos na Tabela~\ref{tab:novas-expansoes}, podemos usar um argumento geral baseado nos graus de liberdade adicionados em cada expansão.
+Qualquer passo de expansão adiciona um novo $K_5$ utilizando $k$ vértices antigos e $5-k$ vértices novos.
+\begin{itemize}
+  \item \textbf{Se $k \le 4$:} Adicionamos vértices e muitas arestas novas (de 4 a 9 arestas), e temos liberdade para colorir as novas arestas. Para cada vértice $v$ antigo do $K_5$, adicionamos arestas conectando-o aos vértices novos. Podemos escolher as cores dessas novas arestas de forma a garantir que $v$ tenha ao menos $1$ vizinho claro e $1$ vizinho escuro no novo $K_5$. O mesmo pode ser feito com os vértices novos.
+  \item \textbf{Se $k = 5$:} Todos os vértices são antigos (caso do $U_\ell$ e suas variantes). Aqui adicionamos entre $1$ e $4$ arestas novas. Para garantir que nenhum vértice se torne monocromático neste novo $K_5$, precisamos que nenhum vértice possua previamente $4$ arestas da mesma cor restritas a esse conjunto de $5$ vértices. Como a penalidade do bloco é estritamente controlada ($p(B) \le 4$), a densidade de arestas pré-existentes é limitada. Embora uma coloração gulosa passo-a-passo pudesse acidentalmente gerar um vértice com 4 arestas da mesma cor (provenientes de $K_5$s distintos), a esparsidade do bloco garante que sempre existam graus de liberdade globais. Assim, é sempre possível colorir as novas arestas ou, se necessário, permutar cores ao longo de ciclos na coloração dos $K_5$s anteriores para estender a coloração mantendo o equilíbrio.
+\end{itemize}
 
 % ============================================================
 % RESULTADOS AUXILIARES E ENUNCIADOS
