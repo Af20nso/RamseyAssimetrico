@@ -1073,7 +1073,269 @@ A prova do Lema~\ref{lem:0-statement-K5} utiliza as seguintes proposições e af
     o que conclui a prova da Afirmação~\ref{afirm:ulimit}.
 \end{proof}
 
+% ============================================================
+% PROVA ALTERNATIVA VIA LINKS À DIREITA E RAMSEY DE VÉRTICES
+% ============================================================
 
+\section{Uma prova alternativa via colorações dos links à direita}
+
+Nesta seção apresentamos uma prova determinística alternativa para a
+coloração de grafos de densidade limitada, que evita $K_3$
+monocromático, $K_4$ arco-íris e $K_5$ lexicográfico. Ao contrário da
+abordagem por expansões (Definição de $R_\ell, T_\ell, Q_\ell, U_\ell$),
+esta prova não depende da estrutura de $K_5$-bloco (fechamento,
+função de penalidade): ela vale para \emph{qualquer} grafo finito com
+densidade máxima $m(B) \leq 3$.
+
+Ao longo de toda a seção, $B$ denota um grafo \textbf{finito}, o que
+garante que todos os máximos e ínfimos considerados são atingidos.
+
+\subsection{O teorema de densidade de Rödl--Ruciński}
+
+Recordamos que, para um grafo $F$, definimos sua densidade máxima por
+\[
+  m(F)
+  :=
+  \max\left\{
+  \frac{e(J)}{v(J)}
+  :
+  J\subseteq F,\ v(J)\geq 1
+  \right\}.
+\]
+
+Para grafos $F$ e $H$ e um inteiro $r\geq 2$, escrevemos
+\[
+  F\xrightarrow{v}(H)_r
+\]
+quando toda $r$-coloração dos vértices de $F$ contém uma cópia
+monocromática de $H$.
+
+\begin{theorem}[Rödl--Ruciński {\cite[Theorem~5]{rodl1993lower}}]
+  \label{thm:rr-vertex}
+  Para todo grafo $H$ e todo inteiro $r\geq 2$, defina
+  \[
+    m_{\inf}^{(1)}(H,r)
+    :=
+    \inf\left\{
+    m(F):
+    F \text{ grafo finito},\ F\xrightarrow{v}(H)_r
+    \right\}.
+  \]
+  Então
+  \[
+    \frac{1}{2}D(H)\,r
+    \leq
+    m_{\inf}^{(1)}(H,r),
+    \qquad\text{onde } D(H):=\max_{J\subseteq H}\delta(J).
+  \]
+\end{theorem}
+
+Aplicando o Teorema~\ref{thm:rr-vertex} ao grafo $H=K_4$ e a $r=2$,
+temos $D(K_4)=\delta(K_4)=3$ (nenhum subgrafo próprio de $K_4$ tem
+grau mínimo maior que $3$), logo
+\[
+  m_{\inf}^{(1)}(K_4,2)\geq \tfrac{1}{2}\cdot 3\cdot 2=3.
+\]
+Em particular,
+\begin{equation}
+  \label{eq:rr-k4}
+  F\xrightarrow{v}(K_4)_2
+  \quad\Longrightarrow\quad
+  m(F)\geq 3.
+\end{equation}
+
+\subsection{Vértices bons e o lema estrutural}
+
+Fixe um grafo finito $B$ munido de uma ordem total $\sigma$ sobre seus
+vértices. Para cada $x\in V(B)$, definimos a \emph{vizinhança à
+  direita} de $x$ por
+\[
+  N_\sigma^+(x):=\{y\in N_B(x): x<_\sigma y\}
+\]
+e o \emph{link à direita} de $x$ por $L_x:=B[N_\sigma^+(x)]$.
+
+\begin{definition}[Vértice bom]
+  \label{def:bom}
+  Um vértice $x\in V(B)$ é \emph{bom} se $L_x\not\xrightarrow{v}(K_4)_2$,
+  isto é, se existe uma $2$-coloração
+  $\varphi_x:N_\sigma^+(x)\to\{0,1\}$ tal que nenhum $K_4$ de $L_x$ é
+  monocromático sob $\varphi_x$.
+\end{definition}
+
+\begin{lemma}[Todos os vértices são bons]
+  \label{lem:todos-bons}
+  Seja $B$ um grafo finito e ordenado com $m(B)\leq 3$. Então todo
+  $x\in V(B)$ é bom.
+\end{lemma}
+
+\begin{proof}
+  Suponha, por contradição, que exista $x\in V(B)$ ruim, isto é,
+  $L_x\xrightarrow{v}(K_4)_2$. Por \eqref{eq:rr-k4}, $m(L_x)\geq 3$.
+
+  Como $L_x$ é finito, o máximo na definição de $m(L_x)$ é atingido:
+  existe $J\subseteq L_x$ com $e(J)/v(J)=m(L_x)\geq 3$, ou seja,
+  $e(J)\geq 3v(J)$. (Sem perda de generalidade $J$ pode ser tomado
+  induzido, já que acrescentar arestas só aumenta a razão
+  $e(J)/v(J)$.)
+
+  Como $J$ é simples, $e(J)\leq\binom{v(J)}{2}$. Combinando,
+  \[
+    3v(J)\leq\frac{v(J)(v(J)-1)}{2}
+    \quad\Longrightarrow\quad
+    6\leq v(J)-1
+    \quad\Longrightarrow\quad
+    v(J)\geq 7.
+  \]
+
+  Como $V(J)\subseteq N_\sigma^+(x)$, o vértice $x$ é adjacente, em
+  $B$, a todo vértice de $J$. Considere o \emph{cone} $C:=x+J$, com
+  \[
+    V(C):=V(J)\cup\{x\},\qquad
+    E(C):=E(J)\cup\{xy: y\in V(J)\}.
+  \]
+  Como $x$ é adjacente a todos os vértices de $J$, temos $C\subseteq
+    B$. Além disso, $v(C)=v(J)+1$ e $e(C)=e(J)+v(J)\geq 4v(J)$.
+
+  Como $v(J)\geq 7>3$, temos $4v(J)>3v(J)+3=3(v(J)+1)$, ou seja,
+  \[
+    \frac{e(C)}{v(C)}\geq\frac{4v(J)}{v(J)+1}>3.
+  \]
+  Como $C\subseteq B$, isso implica $m(B)\geq e(C)/v(C)>3$,
+  contradizendo a hipótese $m(B)\leq 3$.
+
+  Portanto nenhum vértice ruim existe: todo $x\in V(B)$ é bom.
+\end{proof}
+
+\subsection{Construção da coloração}
+
+Escreva $V(B)=\{v_1,\ldots,v_n\}$ com $v_1<_\sigma\cdots<_\sigma v_n$.
+Pelo Lema~\ref{lem:todos-bons}, para cada $i\in[n]$ podemos escolher
+\[
+  \varphi_i:N_\sigma^+(v_i)\longrightarrow\{0,1\}
+\]
+tal que nenhum $K_4$ de $L_{v_i}$ seja monocromático sob $\varphi_i$.
+Definimos $\psi:E(B)\to\{0,1\}$ por
+\[
+  \psi(v_iv_j):=\varphi_i(v_j),\qquad i<j.
+\]
+
+\begin{remark}[Ausência de conflito]
+  Um mesmo vértice $v_j$ pode pertencer a vários conjuntos
+  $N_\sigma^+(v_i)$, e os valores $\varphi_i(v_j)$ não precisam
+  coincidir para diferentes $i$. Isso não gera incompatibilidade:
+  toda aresta $v_iv_j$ ($i<j$) tem um único menor extremo, $v_i$, e é
+  colorida exatamente uma vez, por $\varphi_i$.
+\end{remark}
+
+Fixamos também uma função \textbf{injetiva} $\lambda:V(B)\to\mathbb{N}$
+e uma função injetiva $\iota:\mathbb{N}\times\{0,1\}\to\mathbb{N}$
+(por exemplo $\iota(a,b)=2a+b$), e definimos a coloração final
+\[
+  \chi(v_iv_j):=\iota\bigl(\lambda(v_i),\,\psi(v_iv_j)\bigr)
+  \;=\;\bigl(\lambda(v_i),\varphi_i(v_j)\bigr),
+  \qquad i<j.
+\]
+
+\begin{theorem}[Coloração determinística do bloco]
+  \label{thm:coloracao-bloco}
+  Seja $B$ um grafo finito munido de ordem total $\sigma$, com
+  $m(B)\leq 3$. A coloração $\chi$ definida acima não possui:
+  \begin{enumerate}
+    \item[(i)] $K_3$ monocromático;
+    \item[(ii)] $K_4$ arco-íris;
+    \item[(iii)] $K_5$ min-lex com respeito a $\sigma$;
+    \item[(iv)] $K_5$ max-lex com respeito a $\sigma$.
+  \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+  \textbf{(i) Ausência de $K_3$ monocromático.}
+  Para $v_i<_\sigma v_j<_\sigma v_k$, temos
+  $\chi(v_iv_j)=(\lambda(v_i),\varphi_i(v_j))$ e
+  $\chi(v_jv_k)=(\lambda(v_j),\varphi_j(v_k))$. Como $\lambda$ é
+  injetiva e $v_i\neq v_j$, $\lambda(v_i)\neq\lambda(v_j)$, logo
+  $\chi(v_iv_j)\neq\chi(v_jv_k)$ independentemente das cores
+  auxiliares. O triângulo não é monocromático.
+
+  \medskip
+  \noindent\textbf{(ii) Ausência de $K_4$ arco-íris.}
+  Seja $v_i<_\sigma v_j<_\sigma v_k<_\sigma v_\ell$ uma cópia de
+  $K_4$. As três arestas incidentes ao vértice mínimo $v_i$ têm todas
+  primeira coordenada $\lambda(v_i)$; suas segundas coordenadas estão
+  em $\{0,1\}$, logo, pelo princípio da casa dos pombos, duas delas
+  coincidem. Portanto duas arestas do $K_4$ têm a mesma cor completa,
+  e o $K_4$ não é arco-íris.
+
+  \medskip
+  \noindent\textbf{(iii) Ausência de $K_5$ min-lex.}
+  Seja $H\cong K_5$ com vértices
+  $v_{i_1}<_\sigma\cdots<_\sigma v_{i_5}$. Como $H$ é completo, os
+  quatro vértices $v_{i_2},\ldots,v_{i_5}$ pertencem a
+  $N_\sigma^+(v_{i_1})$ e induzem uma cópia de $K_4$ em
+  $L_{v_{i_1}}$. Pela escolha de $\varphi_{i_1}$, os valores
+  $\varphi_{i_1}(v_{i_2}),\ldots,\varphi_{i_1}(v_{i_5})$ não são todos
+  iguais. Logo as quatro arestas incidentes a $v_{i_1}$ dentro de $H$
+  não têm todas a mesma segunda coordenada, e portanto não têm todas
+  a mesma cor $\chi$ — o que uma cópia min-lex exigiria. Assim $H$
+  não é min-lex.
+
+  \medskip
+  \noindent\textbf{(iv) Ausência de $K_5$ max-lex.}
+  Note que este item não utiliza a hipótese $m(B)\leq 3$ nem a
+  escolha específica de $\varphi_i$: ele vale para \emph{qualquer}
+  coloração da forma $\chi(v_iv_j)=(\lambda(v_i),\varphi_i(v_j))$ com
+  $\lambda$ injetiva.
+  Suponha, por contradição, que $H=\{x_1<_\sigma\cdots<_\sigma
+    x_5\}\cong K_5$ seja max-lex sob $\chi$. As arestas
+  $x_1x_3$ e $x_2x_3$ têm o mesmo maior extremo $x_3$, logo a
+  condição max-lex exige $\chi(x_1x_3)=\chi(x_2x_3)$. Mas
+  \[
+    \chi(x_1x_3)=(\lambda(x_1),\varphi_{x_1}(x_3)),\qquad
+    \chi(x_2x_3)=(\lambda(x_2),\varphi_{x_2}(x_3)),
+  \]
+  e como $\lambda$ é injetiva e $x_1\neq x_2$,
+  $\lambda(x_1)\neq\lambda(x_2)$, logo
+  $\chi(x_1x_3)\neq\chi(x_2x_3)$ — uma contradição.
+  (O mesmo argumento vale para $K_t$ max-lex com qualquer $t\geq 3$.)
+\end{proof}
+
+\begin{remark}[Vértices monocromáticos locais não são um problema]
+  A condição sobre $\varphi_x$ não exige cores distintas nem classes
+  de cor pequenas: exige apenas que nenhuma classe contenha uma
+  cópia de $K_4$. Uma classe de $\varphi_x$ pode conter vértices
+  isolados, arestas, triângulos, ou grafos maiores livres de $K_4$ —
+  a única configuração proibida é $y_1,y_2,y_3,y_4\in N_\sigma^+(x)$
+  formando $K_4$ com $\varphi_x(y_1)=\cdots=\varphi_x(y_4)$, que
+  criaria um $K_5=\{x,y_1,y_2,y_3,y_4\}$ min-lex.
+\end{remark}
+
+\begin{remark}[Relação com o procedimento de Rödl--Ruciński]
+  O procedimento admite leitura sequencial: processamos
+  $v_1,\ldots,v_n$ em ordem; ao processar $v_i$, colorimos as arestas
+  ainda não coloridas $v_iv_j$ ($j>i$) segundo $\varphi_i$. Após
+  processar $v_i$, nenhuma decisão futura pode criar um $K_5$
+  min-lex com vértice mínimo $v_i$, pois suas quatro arestas dentro
+  de qualquer tal $K_5$ já foram definitivamente coloridas de forma
+  não constante na coordenada auxiliar. A diferença em relação ao
+  procedimento clássico é trabalhar com $N_\sigma^+(v_i)$ em vez da
+  vizinhança inteira — o que basta, pois um $K_5$ com vértice mínimo
+  $v_i$ usa apenas vizinhos posteriores de $v_i$.
+\end{remark}
+
+\begin{remark}[Independência da estrutura de bloco]
+  O Teorema~\ref{thm:coloracao-bloco} não usa em nenhum momento
+  a noção de $K_5$-fechamento ou $K_5$-bloco: a única hipótese é
+  $m(B)\leq 3$. Isso simplifica substancialmente a prova do análogo
+  do Lema~\ref{lem:0-statement-K5}, que dependia da classificação das expansões
+  em $R_\ell,T_\ell,Q_\ell,U_\ell$ e do controle do número de passos
+  $U_\ell$. A decomposição em blocos permanece útil no algoritmo
+  global — por exemplo, para permitir paletas de cores disjuntas
+  entre blocos que compartilham vértices, já que a densidade de uma
+  união de dois grafos de densidade $\leq 3$ que se intersectam em
+  poucos vértices pode ultrapassar $3$ — mas deixa de ser necessária
+  para a prova de que \emph{um único} bloco admite a coloração
+  desejada.
+\end{remark}
 
 
 \vspace{1cm}
