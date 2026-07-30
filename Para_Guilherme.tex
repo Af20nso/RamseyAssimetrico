@@ -1,0 +1,967 @@
+\documentclass[reqno, 12pt]{amsart}
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsfonts,amssymb,amsmath,textcomp,amsthm}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{geometry}
+\geometry{left=25mm, right=25mm, top=22mm, bottom=28mm}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{csquotes}
+\usepackage[hidelinks]{hyperref}
+\usepackage[backend=biber, style=numeric, maxbibnames=99]{biblatex}
+\addbibresource{refs_antiramsey.bib}
+\setlength{\parindent}{1.2cm}
+\numberwithin{equation}{section}
+
+% -------------------------------------------------------
+% Ambientes
+% -------------------------------------------------------
+\theoremstyle{plain}
+\newtheorem{theorem}{Teorema}[section]
+\newtheorem{proposition}[theorem]{Proposição}
+\newtheorem{lemma}[theorem]{Lema}
+\newtheorem{corollary}[theorem]{Corolário}
+\newtheorem{afirmacao}[theorem]{Afirmação}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definição}
+\newtheorem{question}[theorem]{Questão}
+\newtheorem{problem}[theorem]{Problema}
+\newtheorem{remark}[theorem]{Observação}
+\newtheorem{example}[theorem]{Exemplo}
+
+% -------------------------------------------------------
+% Macros
+% -------------------------------------------------------
+\newcommand{\Gnp}{\mathcal{G}(n,p)}
+\newcommand{\rb}{\xrightarrow{\,\mathrm{rb}\,}}
+\newcommand{\ramsey}[1]{\xrightarrow{\,#1\,}}
+\newcommand{\cram}{\xrightarrow{\,\mathrm{c\text{-}ram}\,}}
+\newcommand{\mdens}{m_2}
+\newcommand{\maxdens}{m}
+\newcommand{\whp}{a.a.s.}
+
+\date{\today}
+
+% ============================================================
+\begin{document}
+% ============================================================
+
+\begin{center}
+  {\large\textbf{Ramsey Canônico Assimétrico em Grafos Aleatórios}}
+
+  \vspace{0.4cm}
+
+  Afonso Sant'Anna \quad Hugo Vicente
+
+  \vspace{0.2cm}
+
+  {\small Orientador: Yoshiharu Kohayakawa \quad
+    Coorientador: Guilherme O.\ Mota}
+
+  \vspace{0.2cm}
+
+  {\small Instituto de Matemática e Estatística -- USP}
+\end{center}
+
+\vspace{0.5cm}
+
+\noindent\textbf{Nota.}
+Este documento apresenta as definições, resultados da literatura e os
+resultados originais relativos ao problema de Ramsey canônico assimétrico
+em grafos aleatórios, preparado para discussão com o Coorientador.
+
+\tableofcontents
+
+\bigskip
+
+% ============================================================
+\section{Preliminares e Notação}
+% ============================================================
+
+Denotamos por $\Gnp$ o grafo aleatório binomial com $n$ vértices em que cada aresta
+está presente independentemente com probabilidade $p = p(n)$.
+Dizemos que $\Gnp$ satisfaz uma propriedade \emph{assintoticamente quase certamente}
+(\whp) se a probabilidade de satisfazê-la tende a $1$ quando $n \to \infty$.
+
+\begin{definition}[Limiar e tipos de limiar]
+  Seja $\mathcal{P}$ uma propriedade monótona crescente de grafos.
+  Uma função $\hat{p} = \hat{p}(n)$ é um \textbf{limiar grosseiro} (\emph{coarse threshold})
+  para $\mathcal{P}$ em $\Gnp$ se
+  \[
+    \lim_{n\to\infty} \Pr[\Gnp \in \mathcal{P}] =
+    \begin{cases}
+      0 & \text{se } p = o(\hat{p}),      \\
+      1 & \text{se } p = \omega(\hat{p}).
+    \end{cases}
+  \]
+  Dizemos que $\hat{p}$ é um \textbf{limiar semi-agudo} (\emph{semi-sharp threshold})
+  se existem constantes $c, C > 0$ tais que
+  \[
+    \lim_{n\to\infty} \Pr[\Gnp \in \mathcal{P}] =
+    \begin{cases}
+      0 & \text{se } p \le c\,\hat{p}, \\
+      1 & \text{se } p \ge C\,\hat{p}.
+    \end{cases}
+  \]
+  O \textbf{$0$-enunciado} refere-se à afirmação para $p$ abaixo do limiar,
+  e o \textbf{$1$-enunciado} à afirmação para $p$ acima do limiar.
+\end{definition}
+
+\begin{definition}[Densidades de um grafo]
+  \label{def:densidades}
+  Dado um grafo $H$, definem-se:
+  \begin{itemize}
+    \item A \textbf{densidade} de $H$:
+          $d(H) := \dfrac{e(H)}{v(H)}$, onde $e(H) = |E(H)|$ e $v(H) = |V(H)|$.
+
+    \item A \textbf{densidade máxima} de $H$:
+          \[
+            \maxdens(H) := \max\!\left\{\frac{e(J)}{v(J)} : J \subseteq H,\; v(J) \ge 1\right\}.
+          \]
+          Dizemos que $H$ é \textbf{balanceado} se $\maxdens(H) = d(H)$, e
+          \textbf{estritamente balanceado} se $\maxdens(H) > d(J)$ para todo
+          $J \subsetneq H$ com $v(J) \ge 1$.
+
+    \item A \textbf{2-densidade} de $H$ (para $v(H) \ge 3$):
+          \[
+            d_2(H) := \frac{e(H)-1}{v(H)-2}.
+          \]
+
+    \item A \textbf{2-densidade máxima} de $H$:
+          \[
+            \mdens(H) := \max\!\left\{d_2(J) : J \subseteq H,\; v(J) \ge 3\right\}
+            \cup \left\{\tfrac{1}{2}\right\}.
+          \]
+          (A fração $\frac{1}{2}$ corresponde ao caso $H \cong K_2$.)
+          Dizemos que $H$ é \textbf{$2$-balanceado} se $\mdens(H) = d_2(H)$, e
+          \textbf{estritamente $2$-balanceado} se $\mdens(H) > d_2(J)$ para todo
+          $J \subsetneq H$.
+  \end{itemize}
+\end{definition}
+
+\begin{example}
+  Para o clique $K_k$ com $k \ge 3$:
+  $\mdens(K_k) = \dfrac{\binom{k}{2}-1}{k-2} = \dfrac{k+1}{2}$.
+  Em particular, $\mdens(K_3) = 2$, $\mdens(K_4) = \frac{5}{2}$, $\mdens(K_5) = 3$.
+\end{example}
+
+\begin{definition}[$H$-fechamento]
+  \label{def:H-fechado}
+  Dado um grafo $G$ e um grafo $H$, dizemos que:
+  \begin{itemize}
+    \item Uma aresta $e \in E(G)$ é \textbf{$H$-fechada} se pertence a pelo menos duas cópias de~$H$ em~$G$.
+    \item Uma cópia $H' \subseteq G$ de $H$ é \textbf{$H$-fechada} se pelo menos três de suas arestas são $H$-fechadas.
+    \item O grafo $G$ é \textbf{$H$-fechado} se todo vértice e toda aresta de~$G$ pertencem a pelo menos uma cópia de~$H$, e toda cópia de~$H$ em~$G$ é $H$-fechada.
+  \end{itemize}
+\end{definition}
+
+\begin{definition}[$H$-Bloco]
+  \label{def:H-bloco}
+  Um grafo $G$ é um \textbf{$H$-bloco} se $G$ é $H$-fechado e, para todo subconjunto próprio não-vazio de arestas $E' \subsetneq E(G)$, existe uma cópia $H'$ de $H$ em $G$ tal que $E(H') \cap E' \ne \emptyset$ e $E(H') \setminus E' \ne \emptyset$.
+\end{definition}
+
+% ============================================================
+\section{O Teorema de Rödl--Ruciński e a Ponte Probabilística}
+\label{sec:rodl-rucinski}
+% ============================================================
+
+O seguinte resultado é o marco fundamental da teoria do limiar Ramsey:
+
+\begin{theorem}[Rödl--Ruciński \cite{rodl1993lower, rodl1994random, rodl1995threshold}]
+  \label{thm:rodl-rucinski}
+  Seja $r \ge 2$ um inteiro e seja $H$ um grafo que não é uma floresta de estrelas
+  (e, no caso $r = 2$, também não é um caminho de comprimento~$3$).
+  Existem constantes positivas $c = c(H,r)$ e $C = C(H,r)$ tais que
+  \[
+    \lim_{n\to\infty} \Pr\!\bigl[\Gnp \ramsey{r} H\bigr] =
+    \begin{cases}
+      0 & \text{se } p \le c\, n^{-1/\mdens(H)}, \\
+      1 & \text{se } p \ge C\, n^{-1/\mdens(H)}.
+    \end{cases}
+  \]
+  Em particular, $\hat{p}(n) = n^{-1/\mdens(H)}$ é o limiar semi-agudo para
+  a propriedade $r$-Ramsey de $H$ em $\Gnp$.
+\end{theorem}
+
+A ponte probabilística fundamental que conecta o limite macroscópico de $\Gnp$
+aos blocos de tamanho pequeno é dada pelo seguinte resultado de Nenadov et al.~\cite{nenadov2017algorithmic},
+cuja prova é baseada no método de recipientes (containers) hipergráficos:
+
+\begin{theorem}[\cite{nenadov2017algorithmic}, Lemma 3.1]
+  \label{thm:nenadov-steger}
+  Sejam $H$ um grafo estritamente $2$-balanceado e $c > 0$ uma constante suficientemente pequena.
+  Se $p \le c\, n^{-1/\mdens(H)}$, então \whp\ toda componente conexa do $H$-fechamento de $\Gnp$
+  tem ordem limitada por uma constante $C_0 = C_0(c)$. Em particular, cada $H$-bloco de $\Gnp$
+  tem tamanho $O(1)$ \whp.
+\end{theorem}
+
+% ============================================================
+\section{Coloração Canônica e a Propriedade Ramsey Canônica}
+\label{sec:canonico}
+% ============================================================
+
+A teoria canônica de Ramsey estuda estruturas que emergem em colorações
+\emph{arbitrárias} (sem restrição de número de cores).
+
+\begin{definition}[Coloração canônica]
+  \label{def:canonica}
+  Seja $c : E(G) \to \mathbb{N}$ uma coloração arbitrária das arestas de $G$,
+  com uma ordenação total $v_1 < v_2 < \cdots < v_n$ dos vértices de $G$.
+  Um subgrafo $H \subseteq G$ possui uma \textbf{coloração canônica} se
+  satisfaz um dos seguintes padrões:
+  \begin{enumerate}
+    \item \textbf{Monocromático:} todas as arestas de $H$ têm a mesma cor.
+    \item \textbf{Arco-íris:} todas as arestas de $H$ têm cores distintas.
+    \item \textbf{Lexicográfico (min-lex):} a cor de $v_iv_j$ (com $v_i < v_j$)
+          depende unicamente de $v_i$.
+    \item \textbf{Lexicográfico (max-lex):} a cor de $v_iv_j$ (com $v_i < v_j$)
+          depende unicamente de $v_j$.
+  \end{enumerate}
+\end{definition}
+
+\begin{definition}[Propriedade Ramsey canônica]
+  \label{def:prop-canonica}
+  Dado um grafo ordenado $G$ (com uma ordenação total fixada nos vértices) e um grafo $H$,
+  dizemos que $G$ satisfaz a \textbf{propriedade Ramsey canônica para $H$},
+  e escrevemos $G \xrightarrow{\mathrm{can}} H$, se toda coloração arbitrária das arestas de $G$
+  contém uma cópia canônica de $H$ (isto é, monocromática, arco-íris, min-lex, ou max-lex).
+\end{definition}
+
+\begin{theorem}[Erdős--Rado \cite{erdos1950combinatorial}]
+  Para qualquer inteiro $\ell \ge 1$, existe $N = N(\ell)$ tal que toda coloração
+  arbitrária das arestas de $K_N$ contém uma cópia canônica de $K_\ell$.
+\end{theorem}
+
+O resultado de Erdős--Rado foi trazido para o contexto aleatório por Kamčev e Schacht:
+
+\begin{theorem}[Kamčev--Schacht \cite{kamcev2023canonical}]
+  \label{thm:kamcev}
+  Para todo $\ell \ge 4$, o limiar para a propriedade de que toda coloração
+  arbitrária de $\Gnp$ contenha uma cópia canônica de $K_\ell$ é
+  $\hat{p}(n) = n^{-2/(\ell+1)} = n^{-1/\mdens(K_\ell)}$.
+\end{theorem}
+
+\subsection{Cenário assimétrico}
+
+A generalização natural do problema canônico considera grafos distintos para cada tipo de cópia:
+
+\begin{definition}[Propriedade Ramsey canônica assimétrica]
+  \label{def:assimetrico}
+  Seja $G$ um grafo com uma ordenação total fixada nos vértices.
+  Dados grafos $H_1$, $H_2$ e $H_3$, escrevemos
+  \[
+    G \xrightarrow{\mathrm{can}} (H_1, H_2, H_3)
+  \]
+  para denotar a seguinte propriedade: para toda coloração arbitrária das
+  arestas de $G$, existe pelo menos
+  \begin{itemize}
+    \item uma cópia \textbf{monocromática} de $H_1$, ou
+    \item uma cópia \textbf{arco-íris} de $H_2$, ou
+    \item uma cópia \textbf{lexicográfica} (min-lex) de $H_3$.
+  \end{itemize}
+  (Adotamos ao longo deste trabalho a convenção de que por ``cópia lexicográfica''
+  entendemos sempre a cópia min-lex.)
+\end{definition}
+
+\begin{remark}
+  O caso simétrico $H_1 = H_2 = H_3 = H$ recupera a propriedade canônica clássica
+  $G \xrightarrow{\mathrm{can}} H$ estudada por Kamčev--Schacht.
+  O caso assimétrico surge quando os grafos $H_i$ são distintos, o que torna
+  o limiar potencialmente diferente de $n^{-1/\mdens(H_i)}$ para cada $i$.
+\end{remark}
+
+\begin{question}
+  \label{q:assimetrico}
+  Qual é o comportamento da função limiar $\hat{p}(n)$ para a propriedade
+  $\Gnp \xrightarrow{\mathrm{can}} (H_1, H_2, H_3)$
+  quando $H_1$, $H_2$ e $H_3$ não são todos iguais?
+  Em particular, como o limiar depende das densidades $\mdens(H_i)$?
+\end{question}
+
+% ============================================================
+\section{O Caso Assimétrico \texorpdfstring{$(K_3, K_4, K_5)$}{(K3, K4, K5)}}
+\label{sec:k3k4k5}
+% ============================================================
+
+Queremos determinar o limiar exato para a propriedade
+$\Gnp \xrightarrow{\mathrm{can}} (K_3, K_4, K_5)$.
+Note que, para $p \ll n^{-1/\mdens(K_3)} = n^{-1/2}$, o grafo aleatório \whp\ não
+possui triângulos, tornando a propriedade trivialmente falsa.
+Por outro lado, para $p \gg n^{-1/\mdens(K_5)} = n^{-1/3}$, a existência de um
+$K_5$ canônico é garantida \whp\ pelo Teorema~\ref{thm:kamcev}, o que força a
+existência de uma das estruturas requeridas.
+
+O resultado principal é o seguinte:
+
+\begin{theorem}
+  \label{thm:main-can}
+  Existe um limiar semi-agudo para a propriedade
+  $\Gnp \xrightarrow{\mathrm{can}} (K_3, K_4, K_5)$ em $\hat{p}(n) = n^{-1/3}$.
+  Ou seja, existem constantes $c, C > 0$ tais que:
+  \[
+    \lim_{n \to \infty} \mathbb{P}\!\bigl(\Gnp \xrightarrow{\mathrm{can}} (K_3,K_4,K_5)\bigr) =
+    \begin{cases}
+      1 & \text{se } p \ge C\, n^{-1/3}, \\
+      0 & \text{se } p \le c\, n^{-1/3}.
+    \end{cases}
+  \]
+\end{theorem}
+
+\subsection{Prova do \texorpdfstring{$1$}{1}-enunciado}
+
+Estabelecemos a seguinte redução de dominância:
+a validade da propriedade Ramsey canônica simétrica $G \xrightarrow{\mathrm{can}} K_5$
+implica diretamente a validade da propriedade assimétrica
+$G \xrightarrow{\mathrm{can}} (K_3, K_4, K_5)$.
+
+De fato, seja $\chi: E(G) \to \mathbb{N}$ uma coloração arbitrária e suponha que
+$G \xrightarrow{\mathrm{can}} K_5$. Então existe uma cópia canônica $H \cong K_5$ em $G$,
+que necessariamente cai em um dos seguintes casos:
+\begin{itemize}
+  \item \textbf{Monocromática:} qualquer triângulo $K_3 \subseteq H$ é monocromático.
+  \item \textbf{Arco-íris:} qualquer sub-clique $K_4 \subseteq H$ é arco-íris.
+  \item \textbf{Lexicográfica min-lex:} $G$ contém uma cópia min-lex de $K_5$.
+\end{itemize}
+Em todos os casos, $G \xrightarrow{\mathrm{can}} (K_3, K_4, K_5)$.
+Pelo Teorema~\ref{thm:kamcev} com $\ell = 5$, para $p \ge C\, n^{-1/3}$ temos
+$\Gnp \xrightarrow{\mathrm{can}} K_5$ \whp, completando a prova do $1$-enunciado.
+
+\subsection{Prova do \texorpdfstring{$0$}{0}-enunciado}
+
+Para $p \le c\, n^{-1/3} = c\, n^{-1/\mdens(K_5)}$, aplicamos o
+Teorema~\ref{thm:nenadov-steger} com $H = K_5$. Logo, \whp\ cada $K_5$-bloco
+$B$ de $\Gnp$ tem tamanho $O(1)$ e satisfaz $\maxdens(B) < 3$.
+
+A coloração das arestas de $G$ é construída de modo que dentro de cada bloco $B$
+evita-se simultaneamente $K_3$ monocromático, $K_4$ arco-íris e $K_5$ min-lex,
+o que é garantido pelo seguinte lema central:
+
+\begin{lemma}
+  \label{lem:0-statement-K5}
+  Seja $B$ um $K_5$-bloco com $\maxdens(B) < 3$.
+  Então existe uma coloração $c: E(B) \to \mathbb{N}$ tal que:
+  \begin{enumerate}
+    \item[(i)] $c$ não possui $K_3$ monocromático;
+    \item[(ii)] $c$ não possui $K_4$ arco-íris;
+    \item[(iii)] $c$ não possui $K_5$ lexicográfico.
+  \end{enumerate}
+\end{lemma}
+% ============================================================
+% PROVA ALTERNATIVA VIA LINKS À DIREITA E RAMSEY DE VÉRTICES
+% ============================================================
+
+\subsection{Uma prova alternativa via colorações dos links à direita}
+
+Nesta seção, apresentamos uma prova determinística alternativa para a
+coloração dos blocos. Essa abordagem é independente da análise por
+expansões de cópias de $K_5$.
+
+Recordamos que, para um grafo $F$, definimos sua densidade máxima por
+\[
+  m(F)
+  :=
+  \max\left\{
+  \frac{e(J)}{v(J)}
+  :
+  J\subseteq F,\ v(J)\geq 1
+  \right\}.
+\]
+
+Para grafos $F$ e $H$ e um inteiro $r\geq 2$, escrevemos
+\[
+  F\xrightarrow{v}(H)_r
+\]
+quando toda $r$-coloração dos vértices de $F$ contém uma cópia
+monocromática de $H$.
+
+\begin{theorem}[Rödl--Ruciński]
+  \label{thm:rodl-rucinski-vertex-density}
+  Para todo grafo $H$ e todo inteiro $r\geq 2$, defina
+  \[
+    m_{\inf}^{(1)}(H,r)
+    :=
+    \inf\left\{
+    m(F):
+    F\xrightarrow{v}(H)_r
+    \right\}.
+  \]
+  Então
+  \[
+    \frac{1}{2}D(H)r
+    \leq
+    m_{\inf}^{(1)}(H,r),
+  \]
+  onde
+  \[
+    D(H):=
+    \max_{J\subseteq H}\delta(J).
+  \]
+\end{theorem}
+
+Aplicando o Teorema~\ref{thm:rodl-rucinski-vertex-density}
+ao grafo $H=K_4$ e a $r=2$, obtemos
+\[
+  D(K_4)=3
+\]
+e, consequentemente,
+\[
+  m_{\inf}^{(1)}(K_4,2)
+  \geq
+  \frac{1}{2}\cdot 3\cdot 2
+  =
+  3.
+\]
+Em particular,
+\[
+  F\xrightarrow{v}(K_4)_2
+  \quad\Longrightarrow\quad
+  m(F)\geq 3.
+\]
+
+Fixaremos agora um grafo $B$ equipado com uma ordem total
+$\sigma$ sobre seus vértices.
+
+Para cada $x\in V(B)$, definimos a vizinhança à direita de $x$ por
+\[
+  N_\sigma^+(x)
+  :=
+  \left\{
+  y\in N_B(x):
+  x<_\sigma y
+  \right\}
+\]
+e o link à direita de $x$ por
+\[
+  L_x
+  :=
+  B[N_\sigma^+(x)].
+\]
+
+\begin{definition}[Vértice bom]
+  \label{def:vertice-bom-link}
+  Dizemos que um vértice $x\in V(B)$ é bom se
+  \[
+    L_x\not\xrightarrow{v}(K_4)_2.
+  \]
+  Equivalentemente, $x$ é bom se existe uma 2-coloração
+  \[
+    \varphi_x:
+    N_\sigma^+(x)\longrightarrow\{0,1\}
+  \]
+  tal que nenhum $K_4$ de $L_x$ é monocromático sob $\varphi_x$.
+\end{definition}
+
+O próximo lema mostra que, sob a hipótese de densidade que nos
+interessa, todos os vértices são bons.
+
+\begin{lemma}[Todos os vértices são bons]
+  \label{lem:todos-vertices-bons}
+  Seja $B$ um grafo ordenado tal que
+  \[
+    m(B)\leq 3.
+  \]
+  Então, para todo $x\in V(B)$,
+  \[
+    L_x\not\xrightarrow{v}(K_4)_2.
+  \]
+\end{lemma}
+
+\begin{proof}
+  Suponha, por contradição, que exista um vértice
+  $x\in V(B)$ tal que
+  \[
+    L_x\xrightarrow{v}(K_4)_2.
+  \]
+  Pelo Teorema~\ref{thm:rodl-rucinski-vertex-density},
+  \[
+    m(L_x)\geq 3.
+  \]
+
+  Como $L_x$ é finito, o máximo na definição de $m(L_x)$ é
+  atingido. Logo, existe um subgrafo $J\subseteq L_x$ tal que
+  \[
+    \frac{e(J)}{v(J)}
+    =
+    m(L_x)
+    \geq 3.
+  \]
+  Portanto,
+  \[
+    e(J)\geq 3v(J).
+  \]
+
+  Como $J$ é um grafo simples,
+  \[
+    e(J)\leq \binom{v(J)}{2}.
+  \]
+  Combinando as duas desigualdades, obtemos
+  \[
+    3v(J)
+    \leq
+    \binom{v(J)}{2}
+    =
+    \frac{v(J)(v(J)-1)}{2}.
+  \]
+  Como $v(J)>0$, segue que
+  \[
+    6\leq v(J)-1,
+  \]
+  e, portanto,
+  \[
+    v(J)\geq 7.
+  \]
+
+  Agora usamos a definição de $L_x$. Como
+  \[
+    V(J)\subseteq N_\sigma^+(x),
+  \]
+  o vértice $x$ é adjacente, em $B$, a todos os vértices de $J$.
+
+  Considere o cone sobre $J$ com ápice $x$, que denotaremos por
+  \[
+    C:=x+J.
+  \]
+  Formalmente,
+  \[
+    V(C):=V(J)\cup\{x\}
+  \]
+  e
+  \[
+    E(C)
+    :=
+    E(J)
+    \cup
+    \left\{
+    xy:
+    y\in V(J)
+    \right\}.
+  \]
+  Como $x$ é adjacente a todos os vértices de $J$, temos
+  \[
+    C\subseteq B.
+  \]
+
+  Além disso,
+  \[
+    v(C)=v(J)+1
+  \]
+  e
+  \[
+    e(C)=e(J)+v(J).
+  \]
+  Usando $e(J)\geq 3v(J)$, obtemos
+  \[
+    e(C)
+    \geq
+    4v(J).
+  \]
+  Consequentemente,
+  \[
+    \frac{e(C)}{v(C)}
+    \geq
+    \frac{4v(J)}{v(J)+1}.
+  \]
+
+  Como $v(J)\geq 7>3$, temos
+  \[
+    4v(J)>3v(J)+3,
+  \]
+  e, portanto,
+  \[
+    \frac{4v(J)}{v(J)+1}>3.
+  \]
+  Logo,
+  \[
+    \frac{e(C)}{v(C)}>3.
+  \]
+
+  Como $C\subseteq B$, segue da definição de densidade máxima que
+  \[
+    m(B)
+    \geq
+    \frac{e(C)}{v(C)}
+    >
+    3,
+  \]
+  contradizendo a hipótese $m(B)\leq 3$.
+
+  Portanto, não existe vértice $x\in V(B)$ para o qual
+  $L_x\xrightarrow{v}(K_4)_2$. Assim,
+  \[
+    L_x\not\xrightarrow{v}(K_4)_2
+  \]
+  para todo $x\in V(B)$.
+\end{proof}
+
+\begin{remark}
+  \label{rem:quantificadores-todos-x}
+  O vértice $x$ não é um vértice especial escolhido pela prova.
+  O argumento anterior mostra que a existência de qualquer vértice
+  ruim produziria um subgrafo de $B$ com densidade maior que $3$.
+  Portanto,
+  \[
+    \nexists x\in V(B)
+    \text{ tal que }
+    L_x\xrightarrow{v}(K_4)_2.
+  \]
+  Equivalentemente,
+  \[
+    \forall x\in V(B),
+    \qquad
+    L_x\not\xrightarrow{v}(K_4)_2.
+  \]
+\end{remark}
+
+Construiremos agora a coloração auxiliar.
+
+Escreva
+\[
+  V(B)=\{v_1,\ldots,v_n\},
+  \qquad
+  v_1<_\sigma v_2<_\sigma\cdots<_\sigma v_n.
+\]
+
+Pelo Lema~\ref{lem:todos-vertices-bons}, para cada
+$i\in[n]$ podemos escolher uma 2-coloração
+\[
+  \varphi_i:
+  N_\sigma^+(v_i)\longrightarrow\{0,1\}
+\]
+tal que nenhum $K_4$ de
+\[
+  L_{v_i}=B[N_\sigma^+(v_i)]
+\]
+seja monocromático.
+
+Definimos então
+\[
+  \psi:E(B)\longrightarrow\{0,1\}
+\]
+da seguinte maneira: se $i<j$ e $v_iv_j\in E(B)$, colocamos
+\[
+  \psi(v_iv_j):=\varphi_i(v_j).
+\]
+
+\begin{remark}[Ausência de conflito entre as colorações locais]
+  \label{rem:sem-conflito-phi}
+  Embora um mesmo vértice $v_j$ possa pertencer a vários conjuntos $N_\sigma^+(v_i)$, os valores $\varphi_i(v_j)$ não precisam ser iguais para diferentes índices $i$, e isso não produz qualquer incompatibilidade: $\varphi_i(v_j)$ é usado exclusivamente para colorir a aresta $v_iv_j$. Como toda aresta $v_iv_j$ (com $i < j$) possui um único menor extremo, a saber $v_i$, cada aresta recebe sua cor auxiliar exatamente uma vez.
+\end{remark}
+
+Também escolhemos uma função injetiva
+\[
+  \lambda:V(B)\longrightarrow\mathbb{N}.
+\]
+A coloração min-lex inicial é
+\[
+  \chi_0(v_iv_j):=\lambda(v_i),
+  \qquad i<j.
+\]
+
+A função $\lambda$ deve ser injetiva. Essa condição garante que
+arestas cujos menores extremos são distintos possuem primeiras
+coordenadas distintas.
+
+Finalmente, seja
+\[
+  \iota:
+  \mathbb{N}\times\{0,1\}
+  \longrightarrow
+  \mathbb{N}
+\]
+uma função injetiva, e defina
+\[
+  \chi(v_iv_j)
+  :=
+  \iota\bigl(\lambda(v_i),\psi(v_iv_j)\bigr),
+  \qquad i<j.
+\]
+
+Equivalentemente, podemos pensar diretamente na coloração produto
+\[
+  \chi(v_iv_j)
+  =
+  \bigl(\lambda(v_i),\varphi_i(v_j)\bigr).
+\]
+
+\begin{theorem}
+  \label{thm:coloracao-links-direita-completa}
+  Seja $B$ um grafo equipado com uma ordem total $\sigma$ e suponha que
+  \[
+    m(B)\leq 3.
+  \]
+  Então existe uma coloração
+  \[
+    \chi:E(B)\longrightarrow\mathbb{N}
+  \]
+  que não possui:
+  \begin{enumerate}
+    \item[(i)] um $K_3$ monocromático;
+    \item[(ii)] um $K_4$ arco-íris;
+    \item[(iii)] um $K_5$ min-lex;
+    \item[(iv)] um $K_5$ max-lex.
+  \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+  Usamos a coloração $\chi$ definida acima. Consideremos cada propriedade separadamente.
+
+  Para a ausência de $K_3$ monocromático, tome um triângulo com vértices
+  $v_i <_\sigma v_j <_\sigma v_k$.
+  Temos $\chi(v_iv_j) = (\lambda(v_i),\varphi_i(v_j))$ e $\chi(v_iv_k) = (\lambda(v_i),\varphi_i(v_k))$,
+  enquanto $\chi(v_jv_k) = (\lambda(v_j),\varphi_j(v_k))$.
+  Como $\lambda$ é injetiva e $v_i \neq v_j$, temos $\lambda(v_i) \neq \lambda(v_j)$,
+  logo $\chi(v_iv_j) \neq \chi(v_jv_k)$ e o triângulo não é monocromático.
+  Observe que essa conclusão é independente das cores auxiliares: mesmo que
+  $\psi(v_iv_j) = \psi(v_iv_k) = \psi(v_jv_k)$,
+  a primeira coordenada já impede a monocromaticidade.
+
+  Para a ausência de $K_4$ arco-íris, tome uma cópia de $K_4$ com vértices
+  $v_i <_\sigma v_j <_\sigma v_k <_\sigma v_\ell$.
+  As três arestas incidentes ao vértice mínimo $v_i$ --- a saber $v_iv_j$, $v_iv_k$ e $v_iv_\ell$ ---
+  possuem todas a mesma primeira coordenada $\lambda(v_i)$,
+  e suas segundas coordenadas pertencem ao conjunto de duas cores $\{0,1\}$.
+  Pelo princípio da casa dos pombos, ao menos duas dessas três segundas coordenadas são iguais,
+  logo duas arestas do $K_4$ recebem a mesma cor completa e o $K_4$ não é arco-íris.
+
+  Para a ausência de $K_5$ min-lex, tome uma cópia $H \cong K_5$ com vértices
+  $v_{i_1} <_\sigma v_{i_2} <_\sigma v_{i_3} <_\sigma v_{i_4} <_\sigma v_{i_5}$.
+  Os quatro vértices $v_{i_2}, v_{i_3}, v_{i_4}, v_{i_5}$ são todos vizinhos posteriores de
+  $v_{i_1}$ e induzem uma cópia de $K_4$ em $L_{v_{i_1}}$.
+  A coloração $\varphi_{i_1}$ foi escolhida de modo que nenhum $K_4$ de $L_{v_{i_1}}$
+  seja monocromático, portanto os quatro valores
+  $\varphi_{i_1}(v_{i_2}), \varphi_{i_1}(v_{i_3}), \varphi_{i_1}(v_{i_4}), \varphi_{i_1}(v_{i_5})$
+  não são todos iguais.
+  Embora as quatro arestas incidentes a $v_{i_1}$ em $H$ tenham todas a mesma primeira coordenada
+  $\lambda(v_{i_1})$, ao menos duas possuem segundas coordenadas diferentes,
+  de modo que essas arestas não têm todas a mesma cor completa.
+  Uma cópia min-lex exigiria que todas as arestas incidentes ao vértice mínimo
+  tivessem a mesma cor, o que não ocorre.
+
+  Por fim, para a ausência de $K_t$ max-lex para qualquer $t \geq 3$, suponha por
+  contradição que exista $H = \{x_1 <_\sigma x_2 <_\sigma \cdots <_\sigma x_t\} \cong K_t$
+  que seja max-lex sob $\chi$.
+  As arestas $x_1x_3$ e $x_2x_3$ possuem o mesmo maior extremo $x_3$,
+  de modo que a condição max-lex exige $\chi(x_1x_3) = \chi(x_2x_3)$.
+  Porém,
+  $\chi(x_1x_3) = (\lambda(x_1), \varphi_{x_1}(x_3))$ e
+  $\chi(x_2x_3) = (\lambda(x_2), \varphi_{x_2}(x_3))$;
+  como $\lambda$ é injetiva e $x_1 \neq x_2$, temos $\lambda(x_1) \neq \lambda(x_2)$,
+  logo $\chi(x_1x_3) \neq \chi(x_2x_3)$, uma contradição.
+  Portanto $\chi$ não contém nenhuma cópia max-lex de $K_t$ para $t \geq 3$.
+\end{proof}
+
+% ============================================================
+\section{Outros Casos: Problemas}
+\label{sec:outros}
+% ============================================================
+
+\begin{lemma}
+  \label{lem:334-density}
+  Seja $B$ um grafo ordenado tal que
+  \[
+    m(B)<\frac52=m_2(K_4).
+  \]
+  Então existe uma coloração
+  \[
+    \psi:E(B)\longrightarrow\{0,1\}
+  \]
+  que não contém:
+  \begin{enumerate}
+    \item[(i)] um $K_3$ monocromático;
+    \item[(ii)] um $K_3$ arco-íris;
+    \item[(iii)] um $K_4$ min-lex;
+    \item[(iv)] um $K_4$ max-lex.
+  \end{enumerate}
+\end{lemma}
+
+\begin{proof}
+  Como
+  \[
+    m(B)<m_{\inf}^{(2)}(K_3,2)=\frac52,
+  \]
+  o grafo $B$ não é Ramsey por arestas para $K_3$ em duas cores.
+  Portanto, existe uma coloração
+  \[
+    \psi:E(B)\longrightarrow\{0,1\}
+  \]
+  sem cópias monocromáticas de $K_3$.
+
+  Como $\psi$ utiliza somente duas cores, nenhuma cópia de $K_3$
+  pode ser arco-íris.
+
+  Além disso, uma cópia estritamente min-lex de $K_4$ utiliza
+  três cores distintas, correspondentes aos seus três possíveis
+  menores extremos. Analogamente, uma cópia estritamente max-lex
+  de $K_4$ utiliza três cores distintas, correspondentes aos seus
+  três possíveis maiores extremos.
+
+  Como $\psi$ utiliza somente duas cores, ela não contém cópias
+  min-lex ou max-lex de $K_4$.
+\end{proof}
+
+
+
+\begin{proposition}
+  Se \(G\) é um grafo \(k\)-degenerado, então \(G\) admite uma coloração própria de vértices com no máximo \(k+1\) cores. Em particular,
+  \[
+    \chi(G) \leq k+1.
+  \]
+\end{proposition}
+
+\begin{proof}
+  Como \(G\) é \(k\)-degenerado, todo subgrafo não vazio de \(G\) possui um vértice de grau no máximo \(k\).
+
+  Removendo sucessivamente um vértice de grau no máximo \(k\), obtemos uma ordenação
+  \[
+    v_1,v_2,\ldots,v_n
+  \]
+  dos vértices de \(G\) tal que, para todo \(i\in\{1,\ldots,n\}\), o vértice \(v_i\) possui no máximo \(k\) vizinhos no conjunto
+  \[
+    \{v_{i+1},v_{i+2},\ldots,v_n\}.
+  \]
+
+  Agora colorimos os vértices na ordem inversa,
+  \[
+    v_n,v_{n-1},\ldots,v_1,
+  \]
+  usando um conjunto de \(k+1\) cores.
+
+  No momento em que \(v_i\) é colorido, apenas os seus vizinhos pertencentes ao conjunto
+  \[
+    \{v_{i+1},v_{i+2},\ldots,v_n\}
+  \]
+  já foram coloridos. Pela propriedade da ordenação, existem no máximo \(k\) desses vizinhos. Consequentemente, no máximo \(k\) cores estão proibidas para \(v_i\).
+
+  Como temos \(k+1\) cores disponíveis, existe pelo menos uma cor que não foi utilizada por nenhum vizinho já colorido de \(v_i\). Atribuímos essa cor a \(v_i\).
+
+  Prosseguindo dessa maneira, obtemos uma coloração própria de todos os vértices de \(G\) utilizando no máximo \(k+1\) cores. Portanto,
+  \[
+    \chi(G)\leq k+1.
+  \]
+\end{proof}
+
+
+\begin{lemma}[O caso $(K_3,K_4,K_3)$]
+  \label{lem:343-density}
+  Seja $B$ um grafo equipado com uma ordem total $\sigma$ e suponha que
+  \[
+    m(B)<m_2(K_4)=\frac52.
+  \]
+  Então existe uma coloração
+  \[
+    c:E(B)\longrightarrow\mathbb{N}
+  \]
+  tal que:
+  \begin{enumerate}
+    \item[(i)] $c$ não possui um $K_3$ monocromático;
+    \item[(ii)] $c$ não possui um $K_4$ arco-íris;
+    \item[(iii)] $c$ não possui um $K_3$ min-lex;
+    \item[(iv)] $c$ não possui um $K_3$ max-lex.
+  \end{enumerate}
+\end{lemma}
+
+\begin{proof}
+  Inicialmente, observamos que $B$ é $4$-degenerado. De fato, para
+  todo subgrafo não vazio $F\subseteq B$, temos
+  \[
+    \frac{e(F)}{v(F)}<\frac52.
+  \]
+  Consequentemente, o grau médio de $F$ satisfaz
+  \[
+    \frac{2e(F)}{v(F)}<5.
+  \]
+  Logo, $F$ possui um vértice de grau no máximo $4$. Como isso vale
+  para todo subgrafo $F\subseteq B$, concluímos que $B$ é
+  $4$-degenerado.
+
+  Em particular, $B$ admite uma coloração própria dos vértices com
+  cinco cores. Identificando o conjunto das cores com o grupo
+  aditivo $\mathbb{Z}_5$, fixamos uma coloração própria
+  \[
+    \kappa:V(B)\longrightarrow\mathbb{Z}_5.
+  \]
+
+  Definimos agora uma coloração das arestas de $B$ por
+  \[
+    c(uv):=\kappa(u)+\kappa(v)\pmod 5,
+    \qquad uv\in E(B).
+  \]
+
+  Mostraremos inicialmente que todo triângulo de $B$ é arco-íris.
+  Seja $uvw$ uma cópia de $K_3$ em $B$. Como $\kappa$ é uma
+  coloração própria,
+  \[
+    \kappa(u),\qquad
+    \kappa(v),\qquad
+    \kappa(w)
+  \]
+  são dois a dois distintos.
+
+  Suponha que
+  \[
+    c(uv)=c(uw).
+  \]
+  Pela definição de $c$,
+  \[
+    \kappa(u)+\kappa(v)
+    =
+    \kappa(u)+\kappa(w)
+    \pmod 5.
+  \]
+  Cancelando $\kappa(u)$ em $\mathbb{Z}_5$, obtemos
+  \[
+    \kappa(v)=\kappa(w),
+  \]
+  contradizendo a propriedade de que $\kappa$ é própria.
+
+  Analogamente,
+  \[
+    c(uv)\neq c(vw)
+    \qquad\text{e}\qquad
+    c(uw)\neq c(vw).
+  \]
+  Portanto, as três arestas de $uvw$ recebem cores duas a duas
+  distintas. Logo, todo triângulo de $B$ é arco-íris.
+
+  Em particular, $c$ não possui um $K_3$ monocromático.
+
+  Além disso, considere um triângulo ordenado
+  \[
+    x<_\sigma y<_\sigma z.
+  \]
+  Para que ele fosse min-lex, seria necessário que
+  \[
+    c(xy)=c(xz),
+  \]
+  enquanto, para que fosse max-lex, seria necessário que
+  \[
+    c(xz)=c(yz).
+  \]
+  Ambas as igualdades são impossíveis, pois o triângulo é
+  arco-íris. Portanto, $c$ não possui cópias min-lex ou max-lex de
+  $K_3$.
+
+  Finalmente, a coloração $c$ utiliza no máximo cinco cores, pois
+  seus valores pertencem a $\mathbb{Z}_5$. Como uma cópia de $K_4$
+  possui seis arestas, pelo princípio da casa dos pombos duas de
+  suas arestas recebem a mesma cor. Portanto, nenhuma cópia de
+  $K_4$ é arco-íris.
+
+  Isso conclui a demonstração.
+\end{proof}
+
+
+
+
+% ============================================================
+\printbibliography
+% ============================================================
+
+\end{document}
