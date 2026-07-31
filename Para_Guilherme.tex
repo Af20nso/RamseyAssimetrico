@@ -58,24 +58,14 @@
 
   \vspace{0.4cm}
 
-  Afonso Sant'Anna \quad Hugo Vicente
+  Afonso Sant'Anna \quad Hugo Vicente \quad Guilherme Mota \\
+  Walner Mendonça \quad Taísa Martins
 
-  \vspace{0.2cm}
 
-  {\small Orientador: Yoshiharu Kohayakawa \quad
-    Coorientador: Guilherme O.\ Mota}
-
-  \vspace{0.2cm}
-
-  {\small Instituto de Matemática e Estatística -- USP}
+    {\small Instituto de Matemática e Estatística -- USP}
 \end{center}
 
 \vspace{0.5cm}
-
-\noindent\textbf{Nota.}
-Este documento apresenta as definições, resultados da literatura e os
-resultados originais relativos ao problema de Ramsey canônico assimétrico
-em grafos aleatórios, preparado para discussão com o Coorientador.
 
 \tableofcontents
 
@@ -518,44 +508,16 @@ interessa, todos os vértices são bons.
     v(J)\geq 7.
   \]
 
-  Agora usamos a definição de $L_x$. Como
-  \[
-    V(J)\subseteq N_\sigma^+(x),
-  \]
+  Agora usamos a definição de $L_x$. Como $V(J)\subseteq N_\sigma^+(x)$,
   o vértice $x$ é adjacente, em $B$, a todos os vértices de $J$.
-
-  Considere o cone sobre $J$ com ápice $x$, que denotaremos por
+  Considere o subgrafo de $B$ induzido por $V(J)\cup\{x\}$, que
+  denotaremos por $C := B[V(J)\cup\{x\}]$. Por construção $C\subseteq B$,
+  e temos $v(C)=v(J)+1$ bem como
   \[
-    C:=x+J.
+    e(C)\geq e(J)+v(J),
   \]
-  Formalmente,
-  \[
-    V(C):=V(J)\cup\{x\}
-  \]
-  e
-  \[
-    E(C)
-    :=
-    E(J)
-    \cup
-    \left\{
-    xy:
-    y\in V(J)
-    \right\}.
-  \]
-  Como $x$ é adjacente a todos os vértices de $J$, temos
-  \[
-    C\subseteq B.
-  \]
-
-  Além disso,
-  \[
-    v(C)=v(J)+1
-  \]
-  e
-  \[
-    e(C)=e(J)+v(J).
-  \]
+  pois $E(C)$ contém as arestas de $J$ mais as $v(J)$ arestas de $x$
+  aos vértices de $V(J)$.
   Usando $e(J)\geq 3v(J)$, obtemos
   \[
     e(C)
